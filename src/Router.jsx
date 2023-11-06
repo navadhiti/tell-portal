@@ -1,7 +1,8 @@
 import React from 'react';
 
 const Router = () => {
-    const data = 1;
+    const datas = 2;
+    console.log(datas);
     return <>Tell-portal</>;
 };
 
