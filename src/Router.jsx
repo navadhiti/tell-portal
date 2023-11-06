@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const Router = () => {
-  return <div>Tell-portal</div>;
+    return <>Tell-portal</>;
 };
 
 export default Router;
