@@ -3,6 +3,10 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "engines": {
+        "node": "18.18.2",
+        "npm": "9"
+    },    
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -24,21 +28,13 @@
         "eslint-plugin-react-hooks": "4.6.0",
         "eslint-plugin-react-refresh": "0.4.3",
         "husky": "8.0.3",
-        "lint-staged": "15.0.2",
+        "lint-staged": "14.0.1",
         "prettier": "3.0.3",
         "vite": "4.4.5"
     },
-    "husky": {
-        "hooks": {
-          "pre-commit": "lint-staged"
-        }
-    },
     "lint-staged": {
-        "src/**/*.{js,jsx,json}": [
-            "prettier --write",
-            "eslint --fix src/",
-            "tslint --fix --project .",
-            "git add"
+        "*.{js,jsx}": [
+            "npm run lint"
         ]
     }
 }
