@@ -6,7 +6,7 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 import { lazy } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Header from './layout/header';
 
 const ProtectedRoute = () => {
@@ -22,6 +22,14 @@ const ProtectedRoute = () => {
                     flexWrap="nowrap"
                 >
                     <Header />
+                    <Typography
+                        variant="h5"
+                        fontWeight={'bold'}
+                        component="div"
+                        sx={{ flexGrow: 1, color: 'grey', textAlign: 'center' }}
+                    >
+                        "Speak like me ... Speak with me ..."
+                    </Typography>
                     <Outlet />
                 </Grid>
             ) : (

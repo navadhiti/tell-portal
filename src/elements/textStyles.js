@@ -22,5 +22,15 @@ export const SubHeader = styled(Typography)({
         color: 'grey',
         fontSize: '19px',
         fontWeight: '600',
+        lineHeight: '50px',
+    },
+});
+
+export const Content = styled(Typography)({
+    '&&&': {
+        // color: 'grey',
+        fontSize: '19px',
+        fontWeight: '600',
+        lineHeight: '30px',
     },
 });
