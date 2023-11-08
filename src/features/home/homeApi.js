@@ -9,6 +9,9 @@ export const getQuestionAnswers = (quiznumber) => {
                 .get(`/api/admin/getAllQA?index=${quiznumber}`)
                 .then((response) => {
                     return response.data;
+                })
+                .catch((response) => {
+                    return response?.response?.data;
                 }),
         keepPreviousData: true,
     });

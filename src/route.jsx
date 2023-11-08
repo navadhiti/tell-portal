@@ -50,7 +50,11 @@ export const routes = createBrowserRouter(
                 <Route path="/" element={<Login />} />
                 <Route path="/sign-up" element={<SignUp />} />
                 <Route element={<ProtectedRoute />}>
-                    <Route path="/dashboard" element={<Home />} />
+                    <Route
+                        path="/dashboard"
+                        element={<Home />}
+                        errorElement={<p>error page</p>}
+                    />
                 </Route>
             </Route>
         </>

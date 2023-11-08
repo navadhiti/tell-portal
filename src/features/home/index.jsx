@@ -6,10 +6,10 @@ import {
     IconButton,
     Stack,
 } from '@mui/material';
-import { PrimaryButton } from '../../elements/buttonStyles';
+import { PrimaryButton, SecondaryButton } from '../../elements/buttonStyles';
 import { Content, SubHeader } from '../../elements/textStyles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import Loader from '../../components/loader';
 import { getQuestionAnswers } from './homeApi';
@@ -18,6 +18,7 @@ const HomeScreen = () => {
     const quiznumber = Cookies.get('quiznumber')
         ? JSON.parse(Cookies.get('quiznumber'))
         : 1;
+    const [quizNo, setQuizNo] = useState(quiznumber);
     const [isSpeaked, setIsSpeaked] = useState({
         question: false,
         answer: false,
@@ -25,8 +26,11 @@ const HomeScreen = () => {
     const [texttospeechaudio, settexttospeechaudio] = useState('');
     const [playing, setPlaying] = useState(1);
     const [loading, setLoading] = useState(false);
-    const { data: DataQuizAndAnswers, isLoading } =
-        getQuestionAnswers(quiznumber);
+    const {
+        data: DataQuizAndAnswers,
+        isLoading,
+        refetch,
+    } = getQuestionAnswers(quiznumber);
 
     const convertai4bharat = (propText) => {
         setLoading(true);
@@ -67,6 +71,10 @@ const HomeScreen = () => {
             });
     };
 
+    useEffect(() => {
+        refetch();
+    }, [quizNo]);
+
     return (
         <Container>
             <Loader load={loading || isLoading} />
@@ -76,129 +84,150 @@ const HomeScreen = () => {
                 alignItems={'center'}
                 height={'82vh'}
             >
-                {DataQuizAndAnswers?.data.map((data, index) => {
-                    return (
-                        <Card
-                            key={index}
-                            sx={{
-                                width: '80%',
-                                padding: '20px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                            elevation={6}
+                <Card
+                    sx={{
+                        width: '80%',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                    elevation={6}
+                >
+                    <CardContent
+                        sx={{
+                            width: '95%',
+                            backgroundColor: 'whitesmoke',
+                        }}
+                    >
+                        <SubHeader>Question :</SubHeader>
+                        <Content
+                            color={isSpeaked.question ? 'GrayText' : '#BB86FC'}
                         >
-                            <CardContent
-                                sx={{
-                                    width: '95%',
-                                    backgroundColor: 'whitesmoke',
-                                }}
-                            >
-                                <SubHeader>Question :</SubHeader>
-                                <Content
-                                    color={
-                                        isSpeaked.question
-                                            ? 'GrayText'
-                                            : '#BB86FC'
-                                    }
-                                >
-                                    {data?.question}
-                                </Content>
-                                <Stack
-                                    direction={'row'}
-                                    justifyContent={
-                                        texttospeechaudio
-                                            ? 'flex-end'
-                                            : 'flex-end'
-                                    }
-                                    width={'100%'}
-                                >
-                                    {texttospeechaudio && playing === 1 ? (
-                                        <ReactAudioPlayer
-                                            src={texttospeechaudio}
-                                            controls
-                                            autoPlay
-                                        />
-                                    ) : (
-                                        <IconButton
-                                            onClick={() => {
-                                                setPlaying(1);
-                                                setIsSpeaked({
-                                                    ...isSpeaked,
-                                                    question: true,
-                                                });
-                                                convertai4bharat(
-                                                    data?.question
-                                                );
-                                            }}
-                                        >
-                                            <VolumeUpIcon />
-                                        </IconButton>
-                                    )}
-                                </Stack>
-                            </CardContent>
-
-                            <CardContent sx={{ width: '95%' }}>
-                                <SubHeader>Answer :</SubHeader>
-                                <Content
-                                    color={
-                                        isSpeaked.answer
-                                            ? 'GrayText'
-                                            : '#BB86FC'
-                                    }
-                                >
-                                    {data?.answer}
-                                </Content>
-                                <Stack
-                                    direction={'row'}
-                                    justifyContent={'flex-end'}
-                                    width={'100%'}
-                                >
-                                    {' '}
-                                    {texttospeechaudio && playing === 2 ? (
-                                        <ReactAudioPlayer
-                                            src={texttospeechaudio}
-                                            controls
-                                            autoPlay
-                                        />
-                                    ) : (
-                                        <IconButton
-                                            onClick={() => {
-                                                setPlaying(2);
-                                                setIsSpeaked({
-                                                    ...isSpeaked,
-                                                    answer: true,
-                                                });
-                                                convertai4bharat(data?.answer);
-                                            }}
-                                        >
-                                            <VolumeUpIcon />
-                                        </IconButton>
-                                    )}
-                                </Stack>
-                            </CardContent>
-
-                            <Stack
-                                direction={'row'}
-                                width={'80%'}
-                                justifyContent={'flex-end'}
-                            >
-                                <PrimaryButton
+                            {DataQuizAndAnswers?.data?.question}
+                        </Content>
+                        <Stack
+                            direction={'row'}
+                            justifyContent={
+                                texttospeechaudio ? 'flex-end' : 'flex-end'
+                            }
+                            width={'100%'}
+                        >
+                            {texttospeechaudio && playing === 1 ? (
+                                <ReactAudioPlayer
+                                    src={texttospeechaudio}
+                                    controls
+                                    autoPlay
+                                />
+                            ) : (
+                                <IconButton
                                     onClick={() => {
-                                        Cookies.set(
-                                            'quiznumber',
-                                            quiznumber + 1
+                                        setPlaying(1);
+                                        setIsSpeaked({
+                                            ...isSpeaked,
+                                            question: true,
+                                        });
+                                        convertai4bharat(
+                                            DataQuizAndAnswers?.data?.question
                                         );
                                     }}
                                 >
-                                    Next
-                                </PrimaryButton>
-                            </Stack>
-                        </Card>
-                    );
-                })}
+                                    <VolumeUpIcon />
+                                </IconButton>
+                            )}
+                        </Stack>
+                    </CardContent>
+
+                    <CardContent sx={{ width: '95%' }}>
+                        <SubHeader>Answer :</SubHeader>
+                        <Content
+                            color={isSpeaked.answer ? 'GrayText' : '#BB86FC'}
+                        >
+                            {DataQuizAndAnswers?.data?.answer}
+                        </Content>
+                        <Stack
+                            direction={'row'}
+                            justifyContent={'flex-end'}
+                            width={'100%'}
+                        >
+                            {' '}
+                            {texttospeechaudio && playing === 2 ? (
+                                <ReactAudioPlayer
+                                    src={texttospeechaudio}
+                                    controls
+                                    autoPlay
+                                />
+                            ) : (
+                                <IconButton
+                                    onClick={() => {
+                                        setPlaying(2);
+                                        setIsSpeaked({
+                                            ...isSpeaked,
+                                            answer: true,
+                                        });
+                                        convertai4bharat(
+                                            DataQuizAndAnswers?.data?.answer
+                                        );
+                                    }}
+                                >
+                                    <VolumeUpIcon />
+                                </IconButton>
+                            )}
+                        </Stack>
+                    </CardContent>
+
+                    <Stack
+                        direction={'row'}
+                        width={'80%'}
+                        alignItems={'center'}
+                        justifyContent={
+                            quizNo > 1 ? 'space-between' : 'flex-end'
+                        }
+                    >
+                        {quizNo > 1 && (
+                            <SecondaryButton
+                                onClick={() => {
+                                    if (!quizNo <= 0) {
+                                        settexttospeechaudio('');
+                                        Cookies.set(
+                                            'quiznumber',
+                                            quiznumber - 1
+                                        );
+                                        setQuizNo(quizNo - 1);
+                                        setIsSpeaked({
+                                            answer: false,
+                                            question: false,
+                                        });
+                                    }
+                                }}
+                            >
+                                Previous
+                            </SecondaryButton>
+                        )}
+
+                        <PrimaryButton
+                            disabled={
+                                DataQuizAndAnswers?.data?.totalQuestions <=
+                                quizNo
+                            }
+                            onClick={() => {
+                                settexttospeechaudio('');
+                                Cookies.set('quiznumber', quiznumber + 1);
+                                setQuizNo(quizNo + 1);
+                                setIsSpeaked({
+                                    answer: false,
+                                    question: false,
+                                });
+                            }}
+                        >
+                            {' '}
+                            {DataQuizAndAnswers?.data?.totalQuestions === quizNo
+                                ? 'Completed'
+                                : 'Next'}
+                        </PrimaryButton>
+                    </Stack>
+                </Card>
             </Grid>
         </Container>
     );
