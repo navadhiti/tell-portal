@@ -52,9 +52,9 @@ const SignUpScreen = () => {
                     const storedToken = localStorage.getItem('token');
                     if (storedToken) {
                         navigate('/dashboard');
-                    } 
+                    }
                 }
-            }
+            },
         });
     };
 
