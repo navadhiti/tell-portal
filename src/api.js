@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 export const headerWithToken = axios.create({
-    baseURL: 'https://dev.api.atomzpower.com/api/v1',
+    baseURL: 'https://024a-103-156-100-11.ngrok-free.app',
 });
 
 headerWithToken.interceptors.request.use((config) => {
-    config.headers['Token'] = localStorage.getItem('token');
+    config.headers['x-auth-token'] = localStorage.getItem('token');
     return config;
 });
