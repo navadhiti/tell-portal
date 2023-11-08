@@ -1,15 +1,16 @@
 import { Container, Grid, Stack, TextField } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import { signup } from './signup.api';
 
 const SignUpScreen = () => {
-    const isAuthenticated = localStorage.getItem('token') ? true : false;
     const navigate = useNavigate();
+    const Mutation = signup();
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
         email: yup
@@ -44,14 +45,19 @@ const SignUpScreen = () => {
     });
 
     const onSubmit = (data) => {
-        return data;
+        Mutation.mutate(data, {
+            onSuccess: (response) => {
+                if (response) {
+                    localStorage.setItem('token', response.data.data.token);
+                    const storedToken = localStorage.getItem('token');
+                    if (storedToken) {
+                        navigate('/dashboard');
+                    } 
+                }
+            }
+        });
     };
 
-    useEffect(() => {
-        if (isAuthenticated == true) {
-            navigate('/dashboard');
-        }
-    }, []);
     return (
         <Container>
             <Grid
