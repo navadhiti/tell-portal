@@ -6,7 +6,7 @@ import {
     Stack,
     TextField,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
@@ -15,14 +15,20 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { login } from './login.api';
+
 
 const LoginScreen = () => {
     const navigate = useNavigate();
-    const isAuthenticated = localStorage.getItem('token') ? true : false;
+    const Mutation = login();
+
     const [showPassword, setShowPassword] = useState(false);
 
     const validationSchema = yup.object().shape({
-        fullName: yup.string().required('Full name  is required'),
+        email: yup
+        .string()
+        .email('Invalid email')
+        .required('Email is required'),
         password: yup.string().required('Password is required'),
     });
 
@@ -33,22 +39,24 @@ const LoginScreen = () => {
     } = useForm({
         resolver: yupResolver(validationSchema),
         defaultValues: {
-            fullName: '',
+            email: '',
             password: '',
         },
     });
 
     const onSubmit = (data) => {
-        localStorage.setItem('token', 'ppppppppppppppp');
-        navigate('/dashboard');
-        return data;
+        Mutation.mutate(data, {
+            onSuccess: (response) => {
+                if (response) {
+                    localStorage.setItem('token', response.data.data.token);
+                    const storedToken = localStorage.getItem('token');
+                    if (storedToken) {
+                        navigate('/dashboard');
+                    }
+                }
+            },
+        });
     };
-
-    useEffect(() => {
-        if (isAuthenticated == true) {
-            navigate('/dashboard');
-        }
-    }, []);
 
     return (
         <Container>
@@ -87,15 +95,15 @@ const LoginScreen = () => {
                             >
                                 <Stack>
                                     <TextField
-                                        label="Full name"
-                                        {...register('fullName', {
+                                        label="Email"
+                                        {...register('email', {
                                             required: true,
                                         })}
                                         variant="outlined"
                                         fullWidth
                                     />
                                     <ErrorToast
-                                        error={errors.fullName?.message}
+                                        error={errors?.email?.message}
                                     />
                                 </Stack>
                                 <Stack>
