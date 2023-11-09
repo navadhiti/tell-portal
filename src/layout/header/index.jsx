@@ -8,7 +8,7 @@ import {
     MenuItem,
     Toolbar,
     Typography,
-} from '@mui/material';
+} from '@mui/material';inside
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +30,7 @@ const Header = () => {
             <AppBar
                 position="fixed"
                 sx={{
-                    backgroundColor: '#BB86FC',
+                    backgroundColor: '#FFFFFF',
                     maxHeight: '60px',
                     justifyContent: 'center',
                 }}
@@ -38,12 +38,22 @@ const Header = () => {
                 <Toolbar>
                     <Typography
                         variant="h5"
-                        fontWeight={'bold'}
+                        fontWeight={'800'}
                         component="div"
-                        sx={{ flexGrow: 1, color: 'white' }}
+                        sx={{ flexGrow: 1, color: '#034EA1' }}
                     >
-                        Tell
+                        <span style={{ color: '#034EA1' }}>Tel</span>
+                        <span style={{ color: '#EC1C24' }}>l</span>
+                        <br/>
+                        <div style={{fontSize:'14px'}}>
+                            <span style={{ color: '#034EA1' }}>"Speak like </span>
+                            <span style={{ color: '#EC1C24' }}>me ..."</span>
+                            <span style={{ color: '#034EA1' }}>"Speak with </span>
+                            <span style={{ color: '#EC1C24' }}>me ..."</span>
+                        </div>
+                        
                     </Typography>
+                    
                     <div>
                         <IconButton
                             size="large"
@@ -51,7 +61,7 @@ const Header = () => {
                             color="inherit"
                         >
                             <AccountCircleIcon
-                                sx={{ fontSize: 36, color: 'white' }}
+                                sx={{ fontSize: 36, color: '#034EA1' }}
                             />
                         </IconButton>
                         <Menu

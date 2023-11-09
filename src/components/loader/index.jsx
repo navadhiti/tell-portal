@@ -4,7 +4,13 @@ import { CircularProgress, LinearProgress } from '@mui/material';
 const Loader = ({ circle, load }) => {
     return (
         load === true && (
-            <>{circle === true ? <CircularProgress /> : <LinearProgress />}</>
+            <>
+                {circle === true ? (
+                    <CircularProgress />
+                ) : (
+                    <LinearProgress color="secondary" />
+                )}
+            </>
         )
     );
 };

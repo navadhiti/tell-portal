@@ -22,14 +22,6 @@ const ProtectedRoute = () => {
                     flexWrap="nowrap"
                 >
                     <Header />
-                    <Typography
-                        variant="h5"
-                        fontWeight={'bold'}
-                        component="div"
-                        sx={{ flexGrow: 1, color: 'grey', textAlign: 'center' }}
-                    >
-                        "Speak like me ... Speak with me ..."
-                    </Typography>
                     <Outlet />
                 </Grid>
             ) : (

@@ -98,12 +98,13 @@ const HomeScreen = () => {
                     <CardContent
                         sx={{
                             width: '95%',
-                            backgroundColor: 'whitesmoke',
+                            backgroundColor: '#D9F0F4',
+                            borderRadius: '5px',
                         }}
                     >
                         <SubHeader>Question :</SubHeader>
                         <Content
-                            color={isSpeaked.question ? 'GrayText' : '#BB86FC'}
+                            color={isSpeaked.question ? 'GrayText' : '#034EA1'}
                         >
                             {DataQuizAndAnswers?.data?.question}
                         </Content>
@@ -142,7 +143,7 @@ const HomeScreen = () => {
                     <CardContent sx={{ width: '95%' }}>
                         <SubHeader>Answer :</SubHeader>
                         <Content
-                            color={isSpeaked.answer ? 'GrayText' : '#BB86FC'}
+                            color={isSpeaked.answer ? 'GrayText' : '#034EA1'}
                         >
                             {DataQuizAndAnswers?.data?.answer}
                         </Content>

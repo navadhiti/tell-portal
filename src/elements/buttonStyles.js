@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const PrimaryButton = styled(Button)({
     '&&&': {
         padding: '13px 30px',
-        backgroundColor: '#BB86FC',
+        backgroundColor: '#53C6D9',
         borderRadius: '10px',
         fontFamily: 'Poppins',
         fontSize: '15px',
@@ -13,7 +13,7 @@ export const PrimaryButton = styled(Button)({
         color: '#ffffff',
         height: '40px',
         '&:hover': {
-            backgroundColor: '#D5B7F9',
+            backgroundColor: '#9ACFD8',
             color: '#ffffff',
         },
         textTransform: 'capitalize',
@@ -24,15 +24,16 @@ export const SecondaryButton = styled(Button)({
     '&&&': {
         padding: '13px 30px',
         // backgroundColor: '#E0DBE6',
+        border: '1px solid ',
         borderRadius: '10px',
         fontFamily: 'Poppins',
         fontSize: '15px',
         fontWeight: '700',
         textAlign: 'center',
-        color: 'grey',
+        color: '#5C6E7B',
         height: '40px',
         '&:hover': {
-            backgroundColor: '#D5B7F9',
+            backgroundColor: '#53C6D9',
             color: '#ffffff',
         },
         textTransform: 'capitalize',

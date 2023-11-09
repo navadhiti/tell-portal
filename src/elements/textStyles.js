@@ -19,7 +19,7 @@ export const ParagraphBold = styled(Typography)({
 
 export const SubHeader = styled(Typography)({
     '&&&': {
-        color: 'grey',
+        color: '#4C4B4D',
         fontSize: '19px',
         fontWeight: '600',
         lineHeight: '50px',
