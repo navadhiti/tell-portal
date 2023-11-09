@@ -17,7 +17,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { login } from './login.api';
 
-
 const LoginScreen = () => {
     const navigate = useNavigate();
     const Mutation = login();
@@ -26,9 +25,9 @@ const LoginScreen = () => {
 
     const validationSchema = yup.object().shape({
         email: yup
-        .string()
-        .email('Invalid email')
-        .required('Email is required'),
+            .string()
+            .email('Invalid email')
+            .required('Email is required'),
         password: yup.string().required('Password is required'),
     });
 
