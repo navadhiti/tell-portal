@@ -16,12 +16,12 @@ export const getQuestionAnswers = (quiznumber) => {
                 }),
         keepPreviousData: true,
     });
-}
+};
 export const valueCalcuate = (text, speechText) => {
     let texttemp = speechText.toLowerCase();
 
     texttemp = replaceAll(texttemp, '.', ' ');
-    texttemp = replaceAll(texttemp, "'", ' ');
+    texttemp = replaceAll(texttemp, '\'', ' ');
     texttemp = replaceAll(texttemp, ',', ' ');
     texttemp = replaceAll(texttemp, '!', ' ');
     texttemp = replaceAll(texttemp, '|', ' ');
@@ -32,7 +32,7 @@ export const valueCalcuate = (text, speechText) => {
     let tempteacherText = text.toLowerCase();
 
     tempteacherText = replaceAll(tempteacherText, '.', ' ');
-    tempteacherText = replaceAll(tempteacherText, "'", ' ');
+    tempteacherText = replaceAll(tempteacherText, '\'', ' ');
     tempteacherText = replaceAll(tempteacherText, ',', ' ');
     tempteacherText = replaceAll(tempteacherText, '!', ' ');
     tempteacherText = replaceAll(tempteacherText, '|', ' ');
