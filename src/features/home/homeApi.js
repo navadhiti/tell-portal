@@ -16,40 +16,28 @@ export const getQuestionAnswers = (quiznumber) => {
                 }),
         keepPreviousData: true,
     });
-};
-
-
-
-
-
+}
 export const valueCalcuate = (text, speechText) => {
-
-
     let texttemp = speechText.toLowerCase();
 
     texttemp = replaceAll(texttemp, '.', ' ');
-    texttemp = replaceAll(texttemp, '\'', ' ');
+    texttemp = replaceAll(texttemp, "'", ' ');
     texttemp = replaceAll(texttemp, ',', ' ');
     texttemp = replaceAll(texttemp, '!', ' ');
     texttemp = replaceAll(texttemp, '|', ' ');
     texttemp = replaceAll(texttemp, '?', '');
 
-    const studentTextArray = texttemp.split(' ').filter(word => word !== '');
-
-
-
+    const studentTextArray = texttemp.split(' ').filter((word) => word !== '');
 
     let tempteacherText = text.toLowerCase();
 
     tempteacherText = replaceAll(tempteacherText, '.', ' ');
-    tempteacherText = replaceAll(tempteacherText, '\'', ' ');
+    tempteacherText = replaceAll(tempteacherText, "'", ' ');
     tempteacherText = replaceAll(tempteacherText, ',', ' ');
     tempteacherText = replaceAll(tempteacherText, '!', ' ');
     tempteacherText = replaceAll(tempteacherText, '|', ' ');
     tempteacherText = replaceAll(tempteacherText, '?', ' ');
     const teacherTextArray = tempteacherText.split(' ');
-
-    
 
     let student_correct_words_result = [];
     let student_incorrect_words_result = [];
@@ -66,14 +54,10 @@ export const valueCalcuate = (text, speechText) => {
     for (let i = 0; i < studentTextArray.length; i++) {
         if (teacherTextArray.includes(studentTextArray[i])) {
             correct_words++;
-            student_correct_words_result.push(
-                studentTextArray[i]
-            );
+            student_correct_words_result.push(studentTextArray[i]);
         } else {
             // wrong_words++;
-            student_incorrect_words_result.push(
-                studentTextArray[i]
-            );
+            student_incorrect_words_result.push(studentTextArray[i]);
         }
     }
     //calculation method
@@ -87,14 +71,13 @@ export const valueCalcuate = (text, speechText) => {
         );
     }
 
-    let word_result = (result_per_words === 100) ? 'correct' : 'incorrect';
+    let word_result = result_per_words === 100 ? 'correct' : 'incorrect';
 
     const response = {
-        'student_correct_words_result': student_correct_words_result,
-        'student_incorrect_words_result': student_incorrect_words_result,
-        'word_result': word_result,
-        'word_result_array': word_result_array
+        student_correct_words_result: student_correct_words_result,
+        student_incorrect_words_result: student_incorrect_words_result,
+        word_result: word_result,
+        word_result_array: word_result_array,
     };
     return response;
-
 };

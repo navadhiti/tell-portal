@@ -44,7 +44,6 @@ const SignUp = lazy(() => import('./pages/signup'));
 const Home = lazy(() => import('./pages/home'));
 const Error = lazy(() => import('./components/error'));
 
-
 export const routes = createBrowserRouter(
     createRoutesFromElements(
         <>
@@ -57,7 +56,6 @@ export const routes = createBrowserRouter(
                         element={<Home />}
                         errorElement={<Error />}
                     />
-                  
                 </Route>
             </Route>
         </>
