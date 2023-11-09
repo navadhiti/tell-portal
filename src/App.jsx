@@ -5,6 +5,7 @@ import { routes } from './route';
 import { Suspense } from 'react';
 import Loader from './components/loader';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import './index.css';
 
 const App = () => {
     const queryClient = new QueryClient();
