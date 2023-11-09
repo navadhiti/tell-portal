@@ -8,7 +8,8 @@ import {
     MenuItem,
     Toolbar,
     Typography,
-} from '@mui/material';inside
+} from '@mui/material';
+inside;
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
@@ -44,16 +45,19 @@ const Header = () => {
                     >
                         <span style={{ color: '#034EA1' }}>Tel</span>
                         <span style={{ color: '#EC1C24' }}>l</span>
-                        <br/>
-                        <div style={{fontSize:'14px'}}>
-                            <span style={{ color: '#034EA1' }}>"Speak like </span>
+                        <br />
+                        <div style={{ fontSize: '14px' }}>
+                            <span style={{ color: '#034EA1' }}>
+                                "Speak like{' '}
+                            </span>
                             <span style={{ color: '#EC1C24' }}>me ..."</span>
-                            <span style={{ color: '#034EA1' }}>"Speak with </span>
+                            <span style={{ color: '#034EA1' }}>
+                                "Speak with{' '}
+                            </span>
                             <span style={{ color: '#EC1C24' }}>me ..."</span>
                         </div>
-                        
                     </Typography>
-                    
+
                     <div>
                         <IconButton
                             size="large"
