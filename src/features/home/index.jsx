@@ -17,7 +17,6 @@ import { getQuestionAnswers, valueCalcuate } from './homeApi';
 import Cookies from 'js-cookie';
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
-import AudioAnalyser from 'react-audio-analyser';
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -49,13 +48,14 @@ const HomeScreen = () => {
     const [interimTranscript, setInterimTranscript] = useState('');
     const [finalTranscript, setFinalTranscript] = useState('');
     const [transformedWordResult, setTransformedWordResult] = useState(null);
-
-    const [status, setStatus] = useState('');
-    const [audioSrc, setAudioSrc] = useState('');
-    const [audioType, setAudioType] = useState('audio/wav');
+    const [listeningAnswer, setListeningAnswer] = useState(false);
+    const [transformedAnswerResult, setTransformedAnswerResult] = useState(null);
 
     const convertai4bharat = (propText) => {
+        setListening(false);
+        setListeningAnswer(false);
         setLoading(true);
+        setFinalTranscript('');
         settexttospeechaudio('');
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
@@ -94,6 +94,8 @@ const HomeScreen = () => {
     };
 
     const handleListen = () => {
+        setListeningAnswer(false);
+        setLoading(true);
         if (listening) {
             recognition.start();
             recognition.onend = () => {
@@ -102,12 +104,12 @@ const HomeScreen = () => {
         } else {
             recognition.stop();
             recognition.onend = () => {
-                console.log('Stopped listening per click');
+                return null;
             };
         }
 
         recognition.onstart = () => {
-            console.log('Listening!');
+            return null;
         };
 
         recognition.onresult = (event) => {
@@ -130,8 +132,10 @@ const HomeScreen = () => {
         };
 
         recognition.onerror = (event) => {
-            console.log('Error occurred in recognition: ' + event.error);
+            return null;
         };
+        setLoading(false);
+
     };
 
     useEffect(() => {
@@ -145,6 +149,7 @@ const HomeScreen = () => {
     const SpeechedText = finalTranscript.split(' ');
 
     const toggleListen = () => {
+        settexttospeechaudio('');
         setFinalTranscript('');
         setPlaying(1);
         if (listening == true) {
@@ -156,11 +161,11 @@ const HomeScreen = () => {
         }
     };
 
-    const [listeningAnswer, setListeningAnswer] = useState(false);
-    const [transformedAnswerResult, setTransformedAnswerResult] =
-        useState(null);
+
 
     const handleAnswerListen = () => {
+        setLoading(true);
+
         const recognitionAnswer = new (window.SpeechRecognition ||
             window.webkitSpeechRecognition)();
 
@@ -169,7 +174,7 @@ const HomeScreen = () => {
         recognitionAnswer.lang = 'en-IN';
 
         recognitionAnswer.onstart = () => {
-            console.log('Listening for answer!');
+            return null;
         };
 
         recognitionAnswer.onresult = (event) => {
@@ -190,15 +195,16 @@ const HomeScreen = () => {
         };
 
         recognitionAnswer.onerror = (event) => {
-            console.log(
-                'Error occurred in recognition for answer: ' + event.error
-            );
+            return null;
         };
 
         recognitionAnswer.start();
+        setLoading(false);
+
     };
 
     const toggleAnswerListen = () => {
+        settexttospeechaudio('');
         setListening(false);
         setPlaying(2);
         setFinalTranscript('');
@@ -233,12 +239,13 @@ const HomeScreen = () => {
                     <CardContent
                         sx={{
                             width: '95%',
-                            backgroundColor: 'whitesmoke',
+                            backgroundColor: '#D9F0F4',
+                            borderRadius: '5px',
                         }}
                     >
                         <SubHeader>Question :</SubHeader>
                         <Content
-                            color={isSpeaked.question ? 'GrayText' : '#BB86FC'}
+                            color={isSpeaked.question ? 'GrayText' : '#034EA1'}
                         >
                             {' '}
                             {texttospeechaudio && playing === 1 ? (
@@ -343,7 +350,7 @@ const HomeScreen = () => {
                     <CardContent sx={{ width: '95%' }}>
                         <SubHeader>Answer :</SubHeader>
                         <Content
-                            color={isSpeaked.answer ? 'GrayText' : '#BB86FC'}
+                            color={isSpeaked.answer ? 'GrayText' : '#034EA1'}
                         >
                             {texttospeechaudio && playing === 2 ? (
                                 <>
@@ -355,14 +362,13 @@ const HomeScreen = () => {
                                     />
                                     <IconButton
                                         onClick={() => {
+                                            settexttospeechaudio('');
                                             setPlaying(2);
                                             setIsSpeaked({
                                                 ...isSpeaked,
                                                 answer: true,
                                             });
-                                            convertai4bharat(
-                                                DataQuizAndAnswers?.data?.answer
-                                            );
+                                            convertai4bharat(DataQuizAndAnswers?.data?.answer);
                                         }}
                                     >
                                         <VolumeUpIcon color="primary" />
@@ -371,6 +377,7 @@ const HomeScreen = () => {
                             ) : (
                                 <IconButton
                                     onClick={() => {
+                                        settexttospeechaudio('');
                                         setPlaying(2);
                                         setIsSpeaked({
                                             ...isSpeaked,

@@ -30,20 +30,33 @@ const Header = () => {
             <AppBar
                 position="fixed"
                 sx={{
-                    backgroundColor: '#BB86FC',
-                    maxHeight: '60px',
+                    backgroundColor: '#FFFFFF',
+                    maxHeight: '70px',
                     justifyContent: 'center',
-                }}
+                }} 
             >
                 <Toolbar>
                     <Typography
                         variant="h5"
-                        fontWeight={'bold'}
+                        fontWeight={'800'}
                         component="div"
-                        sx={{ flexGrow: 1, color: 'white' }}
+                        sx={{ flexGrow: 1, color: '#034EA1' }}
                     >
-                        Tell
+                        <span style={{ color: '#034EA1', letterSpacing: '1px' }}>Tel</span>
+                        <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>l</span>
+                        <br />
+                        <div style={{ fontSize: '17px' }}>
+                            <span style={{ color: '#034EA1', letterSpacing: '1px' }}>
+                                "Speak like{' '}
+                            </span>
+                            <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>me ..."</span>
+                            <span style={{ color: '#034EA1', letterSpacing: '1px' }}>
+                                "Speak with{' '}
+                            </span>
+                            <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>me ..."</span>
+                        </div>
                     </Typography>
+
                     <div>
                         <IconButton
                             size="large"
@@ -51,7 +64,7 @@ const Header = () => {
                             color="inherit"
                         >
                             <AccountCircleIcon
-                                sx={{ fontSize: 36, color: 'white' }}
+                                sx={{ fontSize: 36, color: '#034EA1' }}
                             />
                         </IconButton>
                         <Menu

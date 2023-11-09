@@ -28,17 +28,7 @@ export function useWindowSize() {
     return size;
 }
 
-export function getParameter(key, location) {
-    if (key) {
-        const query = new URLSearchParams(location);
-        return query.get(key);
-    }
-    // if (key) {
-    //   const query = new URLSearchParams(window.location.search);
-    //   console.log(query.get(key));
-    //   return query.get(key);
-    // }
-}
+
 
 export function getLayout(url) {
     if (url) {
