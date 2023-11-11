@@ -249,10 +249,16 @@ const HomeScreen = () => {
                                                 ...isSpeaked,
                                                 question: true,
                                             });
-                                            convertai4bharat(DataQuizAndAnswers?.data?.question);
+                                            convertai4bharat(
+                                                DataQuizAndAnswers?.data
+                                                    ?.question
+                                            );
                                         }}
                                     >
-                                        <VolumeUpIcon color="secondary" fontSize='large' />
+                                        <VolumeUpIcon
+                                            color="secondary"
+                                            fontSize="large"
+                                        />
                                     </IconButton>
                                 </>
                             ) : (
@@ -268,7 +274,10 @@ const HomeScreen = () => {
                                         );
                                     }}
                                 >
-                                    <VolumeUpIcon color="secondary" fontSize='large' />
+                                    <VolumeUpIcon
+                                        color="secondary"
+                                        fontSize="large"
+                                    />
                                 </IconButton>
                             )}
                             {DataQuizAndAnswers?.data?.question} ?
@@ -287,14 +296,16 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listening ? (
-                                    <Chip color='secondary' 
+                                    <Chip
+                                        color="secondary"
                                         id="startaudio"
                                         onClick={toggleListen}
-                                        icon={<KeyboardVoiceIcon  />}
+                                        icon={<KeyboardVoiceIcon />}
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip color='primary'
+                                    <Chip
+                                        color="primary"
                                         onClick={toggleListen}
                                         id="stopaudio"
                                         icon={
@@ -356,7 +367,10 @@ const HomeScreen = () => {
                                             );
                                         }}
                                     >
-                                        <VolumeUpIcon color="secondary" fontSize='large' />
+                                        <VolumeUpIcon
+                                            color="secondary"
+                                            fontSize="large"
+                                        />
                                     </IconButton>
                                 </>
                             ) : (
@@ -373,7 +387,10 @@ const HomeScreen = () => {
                                         );
                                     }}
                                 >
-                                    <VolumeUpIcon color="secondary" fontSize='large' />
+                                    <VolumeUpIcon
+                                        color="secondary"
+                                        fontSize="large"
+                                    />
                                 </IconButton>
                             )}
                             {DataQuizAndAnswers?.data?.answer}
@@ -392,7 +409,8 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listeningAnswer ? (
-                                    <Chip color='secondary'
+                                    <Chip
+                                        color="secondary"
                                         clickable={true}
                                         id="startaudio"
                                         onClick={toggleAnswerListen}
@@ -400,7 +418,8 @@ const HomeScreen = () => {
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip color='primary'
+                                    <Chip
+                                        color="primary"
                                         onClick={toggleAnswerListen}
                                         id="stopaudio"
                                         icon={
