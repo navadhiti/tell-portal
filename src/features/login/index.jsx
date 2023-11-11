@@ -25,7 +25,6 @@ const LoginScreen = () => {
     const [showPassword, setShowPassword] = useState(false);
     const { alert, setAlert } = useContext(Context);
 
-
     const validationSchema = yup.object().shape({
         email: yup
             .string()
@@ -64,7 +63,6 @@ const LoginScreen = () => {
                 }
             },
             onError: (error) => {
-
                 setAlert({
                     open: true,
                     severity: 'error',
@@ -79,10 +77,16 @@ const LoginScreen = () => {
         loginMutate(data);
     };
 
-
     useEffect(() => {
+
         setAlert({ ...alert, open: false });
+
+        if (localStorage.getItem('token')) {
+            navigate('/dashboard');
+        }
     }, []);
+
+
 
     return (
         <Container>

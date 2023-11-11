@@ -2,7 +2,7 @@ import {
     Backdrop,
     CircularProgress,
     Grow,
-    LinearProgress
+    LinearProgress,
 } from '@mui/material';
 
 // eslint-disable-next-line react/prop-types
@@ -11,7 +11,10 @@ const Loader = ({ circle, load }) => {
         load === true && (
             <>
                 {circle === true ? (
-                    <Backdrop open={true} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                    <Backdrop
+                        open={true}
+                        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    >
                         <Grow
                             in={true}
                             exit={true}

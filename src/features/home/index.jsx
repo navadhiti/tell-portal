@@ -53,7 +53,6 @@ const HomeScreen = () => {
         useState(null);
     const SpeechedText = finalTranscript.split(' ');
 
-
     const convertai4bharat = (propText) => {
         setListening(false);
         setListeningAnswer(false);
@@ -63,11 +62,11 @@ const HomeScreen = () => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         var payload = JSON.stringify({
-            controlConfig: { dataTracking: true, },
-            input: [{ source: propText, },],
+            controlConfig: { dataTracking: true },
+            input: [{ source: propText }],
             config: {
                 gender: 'female',
-                language: { sourceLanguage: 'en', },
+                language: { sourceLanguage: 'en' },
             },
         });
         var requestOptions = {
@@ -133,8 +132,6 @@ const HomeScreen = () => {
         setLoading(false);
     };
 
-
-
     const toggleListen = () => {
         settexttospeechaudio('');
         setFinalTranscript('');
@@ -197,16 +194,13 @@ const HomeScreen = () => {
         }
     };
 
-
     useEffect(() => {
         handleListen();
     }, [listening]);
 
-
     useEffect(() => {
         refetch();
     }, [quizNo]);
-
 
     return (
         <Container>
@@ -255,13 +249,10 @@ const HomeScreen = () => {
                                                 ...isSpeaked,
                                                 question: true,
                                             });
-                                            convertai4bharat(
-                                                DataQuizAndAnswers?.data
-                                                    ?.question
-                                            );
+                                            convertai4bharat(DataQuizAndAnswers?.data?.question);
                                         }}
                                     >
-                                        <VolumeUpIcon color="primary" />
+                                        <VolumeUpIcon color="secondary" fontSize='large' />
                                     </IconButton>
                                 </>
                             ) : (
@@ -277,7 +268,7 @@ const HomeScreen = () => {
                                         );
                                     }}
                                 >
-                                    <VolumeUpIcon />
+                                    <VolumeUpIcon color="secondary" fontSize='large' />
                                 </IconButton>
                             )}
                             {DataQuizAndAnswers?.data?.question} ?
@@ -296,14 +287,14 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listening ? (
-                                    <Chip
+                                    <Chip color='secondary' 
                                         id="startaudio"
                                         onClick={toggleListen}
-                                        icon={<KeyboardVoiceIcon />}
+                                        icon={<KeyboardVoiceIcon  />}
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip
+                                    <Chip color='primary'
                                         onClick={toggleListen}
                                         id="stopaudio"
                                         icon={
@@ -365,7 +356,7 @@ const HomeScreen = () => {
                                             );
                                         }}
                                     >
-                                        <VolumeUpIcon color="primary" />
+                                        <VolumeUpIcon color="secondary" fontSize='large' />
                                     </IconButton>
                                 </>
                             ) : (
@@ -382,7 +373,7 @@ const HomeScreen = () => {
                                         );
                                     }}
                                 >
-                                    <VolumeUpIcon />
+                                    <VolumeUpIcon color="secondary" fontSize='large' />
                                 </IconButton>
                             )}
                             {DataQuizAndAnswers?.data?.answer}
@@ -401,7 +392,7 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listeningAnswer ? (
-                                    <Chip
+                                    <Chip color='secondary'
                                         clickable={true}
                                         id="startaudio"
                                         onClick={toggleAnswerListen}
@@ -409,7 +400,7 @@ const HomeScreen = () => {
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip
+                                    <Chip color='primary'
                                         onClick={toggleAnswerListen}
                                         id="stopaudio"
                                         icon={

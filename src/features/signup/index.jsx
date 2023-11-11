@@ -77,12 +77,14 @@ const SignUpScreen = () => {
         }
     );
 
-
     const onSubmit = (data) => {
         signUpMutate(data);
     };
     useEffect(() => {
         setAlert({ ...alert, open: false });
+        if (localStorage.getItem('token')) {
+            navigate('/dashboard');
+        }
     }, []);
     return (
         <Container>

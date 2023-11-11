@@ -16,8 +16,6 @@ const App = () => {
         message: '',
     });
 
-
-
     return (
         <Suspense fallback={<Loader circle={true} />}>
             <Context.Provider value={{ alert, setAlert }}>
