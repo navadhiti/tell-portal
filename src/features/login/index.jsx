@@ -78,15 +78,12 @@ const LoginScreen = () => {
     };
 
     useEffect(() => {
-
         setAlert({ ...alert, open: false });
 
         if (localStorage.getItem('token')) {
             navigate('/dashboard');
         }
     }, []);
-
-
 
     return (
         <Container>

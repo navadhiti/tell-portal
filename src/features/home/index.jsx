@@ -242,21 +242,25 @@ const HomeScreen = () => {
                                         autoPlay
                                         style={{ display: 'none' }}
                                     />
-                                    <IconButton
+                                    <Chip
                                         onClick={() => {
                                             setPlaying(1);
                                             setIsSpeaked({
                                                 ...isSpeaked,
                                                 question: true,
                                             });
-                                            convertai4bharat(DataQuizAndAnswers?.data?.question);
+                                            convertai4bharat(
+                                                DataQuizAndAnswers?.data
+                                                    ?.question
+                                            );
                                         }}
-                                    >
-                                        <VolumeUpIcon color="secondary" fontSize='large' />
-                                    </IconButton>
+                                        icon={<VolumeUpIcon fontSize="large" />}
+                                        label="Listen"
+                                        color="primary"
+                                    />
                                 </>
                             ) : (
-                                <IconButton
+                                <Chip
                                     onClick={() => {
                                         setPlaying(1);
                                         setIsSpeaked({
@@ -267,12 +271,17 @@ const HomeScreen = () => {
                                             DataQuizAndAnswers?.data?.question
                                         );
                                     }}
-                                >
-                                    <VolumeUpIcon color="secondary" fontSize='large' />
-                                </IconButton>
+                                    icon={<VolumeUpIcon fontSize="large" />}
+                                    label="Listen"
+                                    color="primary"
+                                />
                             )}
-                            {DataQuizAndAnswers?.data?.question} ?
+                            <span>
+                                {' '}
+                                {DataQuizAndAnswers?.data?.question} ?{' '}
+                            </span>
                         </Content>
+
                         <Stack
                             mt={2}
                             direction={'row'}
@@ -287,18 +296,22 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listening ? (
-                                    <Chip color='secondary' 
+                                    <Chip
+                                        color="secondary"
                                         id="startaudio"
                                         onClick={toggleListen}
-                                        icon={<KeyboardVoiceIcon  />}
+                                        icon={
+                                            <KeyboardVoiceIcon fontSize="large" />
+                                        }
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip color='primary'
+                                    <Chip
+                                        color="primary"
                                         onClick={toggleListen}
                                         id="stopaudio"
                                         icon={
-                                            <PauseCircleOutlineOutlinedIcon />
+                                            <PauseCircleOutlineOutlinedIcon fontSize="large" />
                                         }
                                         label="Stop"
                                     />
@@ -343,7 +356,7 @@ const HomeScreen = () => {
                                         autoPlay
                                         style={{ display: 'none' }}
                                     />
-                                    <IconButton
+                                    <Chip
                                         onClick={() => {
                                             settexttospeechaudio('');
                                             setPlaying(2);
@@ -355,12 +368,13 @@ const HomeScreen = () => {
                                                 DataQuizAndAnswers?.data?.answer
                                             );
                                         }}
-                                    >
-                                        <VolumeUpIcon color="secondary" fontSize='large' />
-                                    </IconButton>
+                                        icon={<VolumeUpIcon fontSize="large" />}
+                                        label="Listen"
+                                        color="primary"
+                                    />
                                 </>
                             ) : (
-                                <IconButton
+                                <Chip
                                     onClick={() => {
                                         settexttospeechaudio('');
                                         setPlaying(2);
@@ -372,11 +386,12 @@ const HomeScreen = () => {
                                             DataQuizAndAnswers?.data?.answer
                                         );
                                     }}
-                                >
-                                    <VolumeUpIcon color="secondary" fontSize='large' />
-                                </IconButton>
+                                    icon={<VolumeUpIcon fontSize="large" />}
+                                    label="Listen"
+                                    color="primary"
+                                />
                             )}
-                            {DataQuizAndAnswers?.data?.answer}
+                            <span> {DataQuizAndAnswers?.data?.answer} </span>
                         </Content>
                         <Stack
                             mt={2}
@@ -392,19 +407,23 @@ const HomeScreen = () => {
                                 justifyContent={'flex-start'}
                             >
                                 {!listeningAnswer ? (
-                                    <Chip color='secondary'
+                                    <Chip
+                                        color="secondary"
                                         clickable={true}
                                         id="startaudio"
                                         onClick={toggleAnswerListen}
-                                        icon={<KeyboardVoiceIcon />}
+                                        icon={
+                                            <KeyboardVoiceIcon fontSize="large" />
+                                        }
                                         label="Try now"
                                     />
                                 ) : (
-                                    <Chip color='primary'
+                                    <Chip
+                                        color="primary"
                                         onClick={toggleAnswerListen}
                                         id="stopaudio"
                                         icon={
-                                            <PauseCircleOutlineOutlinedIcon />
+                                            <PauseCircleOutlineOutlinedIcon fontSize="large" />
                                         }
                                         label="Stop"
                                     />
@@ -438,29 +457,49 @@ const HomeScreen = () => {
                 </Card>
                 <Stack
                     direction={'row'}
-                    width={'80%'}
+                    width={quizNo > 1 ? '80%' : '80%'}
                     alignItems={'center'}
                     justifyContent={quizNo > 1 ? 'space-between' : 'flex-end'}
                 >
                     {quizNo > 1 && (
-                        <SecondaryButton
-                            onClick={() => {
-                                if (!quizNo <= 0) {
+                        <>
+                            <SecondaryButton
+                                onClick={() => {
+                                    if (!quizNo <= 0) {
+                                        settexttospeechaudio('');
+                                        Cookies.set(
+                                            'quiznumber',
+                                            quiznumber - 1
+                                        );
+                                        setQuizNo(quizNo - 1);
+                                        setIsSpeaked({
+                                            answer: false,
+                                            question: false,
+                                        });
+                                        setFinalTranscript('');
+                                    }
+                                }}
+                            >
+                                Previous
+                            </SecondaryButton>
+
+                            <PrimaryButton
+                                onClick={() => {
                                     settexttospeechaudio('');
-                                    Cookies.set('quiznumber', quiznumber - 1);
-                                    setQuizNo(quizNo - 1);
+                                    Cookies.set('quiznumber', 1);
+                                    setQuizNo(1);
                                     setIsSpeaked({
                                         answer: false,
                                         question: false,
                                     });
                                     setFinalTranscript('');
-                                }
-                            }}
-                        >
-                            Previous
-                        </SecondaryButton>
+                                }}
+                            >
+                                {' '}
+                                {'Start Over'}
+                            </PrimaryButton>
+                        </>
                     )}
-
                     <PrimaryButton
                         disabled={
                             DataQuizAndAnswers?.data?.totalQuestions <= quizNo
