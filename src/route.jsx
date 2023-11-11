@@ -6,7 +6,7 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 import { lazy } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, } from '@mui/material';
 import Header from './layout/header';
 
 const ProtectedRoute = () => {

@@ -28,8 +28,6 @@ export function useWindowSize() {
     return size;
 }
 
-
-
 export function getLayout(url) {
     if (url) {
         let value = url.split('&')[1] ? url.split('&')[1].split('=')[1] : '';

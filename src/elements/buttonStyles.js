@@ -17,7 +17,7 @@ export const PrimaryButton = styled(Button)({
             color: '#ffffff',
         },
         textTransform: 'capitalize',
-        letterSpacing:'2px'
+        letterSpacing: '2px',
     },
 });
 

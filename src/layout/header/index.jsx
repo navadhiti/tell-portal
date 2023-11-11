@@ -33,7 +33,7 @@ const Header = () => {
                     backgroundColor: '#FFFFFF',
                     maxHeight: '70px',
                     justifyContent: 'center',
-                }} 
+                }}
             >
                 <Toolbar>
                     <Typography
@@ -42,18 +42,50 @@ const Header = () => {
                         component="div"
                         sx={{ flexGrow: 1, color: '#034EA1' }}
                     >
-                        <span style={{ color: '#034EA1', letterSpacing: '1px' }}>Tel</span>
-                        <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>l</span>
+                        <span
+                            style={{ color: '#034EA1', letterSpacing: '1px' }}
+                        >
+                            Tel
+                        </span>
+                        <span
+                            style={{ color: '#EC1C24', letterSpacing: '1px' }}
+                        >
+                            l
+                        </span>
                         <br />
                         <div style={{ fontSize: '17px' }}>
-                            <span style={{ color: '#034EA1', letterSpacing: '1px' }}>
+                            <span
+                                style={{
+                                    color: '#034EA1',
+                                    letterSpacing: '1px',
+                                }}
+                            >
                                 "Speak like{' '}
                             </span>
-                            <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>me ..."</span>
-                            <span style={{ color: '#034EA1', letterSpacing: '1px' }}>
+                            <span
+                                style={{
+                                    color: '#EC1C24',
+                                    letterSpacing: '1px',
+                                }}
+                            >
+                                me ..."
+                            </span>
+                            <span
+                                style={{
+                                    color: '#034EA1',
+                                    letterSpacing: '1px',
+                                }}
+                            >
                                 "Speak with{' '}
                             </span>
-                            <span style={{ color: '#EC1C24', letterSpacing: '1px' }}>me ..."</span>
+                            <span
+                                style={{
+                                    color: '#EC1C24',
+                                    letterSpacing: '1px',
+                                }}
+                            >
+                                me ..."
+                            </span>
                         </div>
                     </Typography>
 

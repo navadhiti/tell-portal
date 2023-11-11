@@ -49,7 +49,10 @@ const HomeScreen = () => {
     const [finalTranscript, setFinalTranscript] = useState('');
     const [transformedWordResult, setTransformedWordResult] = useState(null);
     const [listeningAnswer, setListeningAnswer] = useState(false);
-    const [transformedAnswerResult, setTransformedAnswerResult] = useState(null);
+    const [transformedAnswerResult, setTransformedAnswerResult] =
+        useState(null);
+    const SpeechedText = finalTranscript.split(' ');
+
 
     const convertai4bharat = (propText) => {
         setListening(false);
@@ -60,19 +63,11 @@ const HomeScreen = () => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         var payload = JSON.stringify({
-            controlConfig: {
-                dataTracking: true,
-            },
-            input: [
-                {
-                    source: propText,
-                },
-            ],
+            controlConfig: { dataTracking: true, },
+            input: [{ source: propText, },],
             config: {
                 gender: 'female',
-                language: {
-                    sourceLanguage: 'en',
-                },
+                language: { sourceLanguage: 'en', },
             },
         });
         var requestOptions = {
@@ -132,21 +127,13 @@ const HomeScreen = () => {
         };
 
         recognition.onerror = (event) => {
-            return null;
+            return event;
         };
-        setLoading(false);
 
+        setLoading(false);
     };
 
-    useEffect(() => {
-        handleListen();
-    }, [listening]);
 
-    useEffect(() => {
-        refetch();
-    }, [quizNo]);
-
-    const SpeechedText = finalTranscript.split(' ');
 
     const toggleListen = () => {
         settexttospeechaudio('');
@@ -161,14 +148,10 @@ const HomeScreen = () => {
         }
     };
 
-
-
     const handleAnswerListen = () => {
         setLoading(true);
-
         const recognitionAnswer = new (window.SpeechRecognition ||
             window.webkitSpeechRecognition)();
-
         recognitionAnswer.continuous = true;
         recognitionAnswer.interimResults = true;
         recognitionAnswer.lang = 'en-IN';
@@ -195,12 +178,10 @@ const HomeScreen = () => {
         };
 
         recognitionAnswer.onerror = (event) => {
-            return null;
+            return event;
         };
-
         recognitionAnswer.start();
         setLoading(false);
-
     };
 
     const toggleAnswerListen = () => {
@@ -215,6 +196,17 @@ const HomeScreen = () => {
             handleAnswerListen();
         }
     };
+
+
+    useEffect(() => {
+        handleListen();
+    }, [listening]);
+
+
+    useEffect(() => {
+        refetch();
+    }, [quizNo]);
+
 
     return (
         <Container>
@@ -368,7 +360,9 @@ const HomeScreen = () => {
                                                 ...isSpeaked,
                                                 answer: true,
                                             });
-                                            convertai4bharat(DataQuizAndAnswers?.data?.answer);
+                                            convertai4bharat(
+                                                DataQuizAndAnswers?.data?.answer
+                                            );
                                         }}
                                     >
                                         <VolumeUpIcon color="primary" />

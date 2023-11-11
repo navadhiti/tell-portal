@@ -1,5 +1,5 @@
 import { Container, Grid, Stack, TextField } from '@mui/material';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
@@ -7,10 +7,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { signup } from './signup.api';
+import { Context } from '../../context';
+import { useMutation } from 'react-query';
+import Loader from '../../components/loader';
+import { CustomAlert } from '../../components/alert';
 
 const SignUpScreen = () => {
     const navigate = useNavigate();
-    const Mutation = signup();
+    const { alert, setAlert } = useContext(Context);
+
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
         email: yup
@@ -44,22 +49,51 @@ const SignUpScreen = () => {
         },
     });
 
-    const onSubmit = (data) => {
-        Mutation.mutate(data, {
+    const { mutate: signUpMutate, isLoading: signUpLoading } = useMutation(
+        signup,
+        {
             onSuccess: (response) => {
                 if (response) {
                     localStorage.setItem('token', response.data.data.token);
                     const storedToken = localStorage.getItem('token');
                     if (storedToken) {
+                        setAlert({
+                            open: true,
+                            severity: 'success',
+                            message: 'Signup successfull',
+                        });
                         navigate('/dashboard');
                     }
                 }
             },
-        });
-    };
+            onError: (error) => {
+                setAlert({
+                    open: true,
+                    severity: 'error',
+                    message: 'Something went wrong...!',
+                });
+                return error;
+            },
+        }
+    );
 
+
+    const onSubmit = (data) => {
+        signUpMutate(data);
+    };
+    useEffect(() => {
+        setAlert({ ...alert, open: false });
+    }, []);
     return (
         <Container>
+            <Loader load={signUpLoading} />
+            <CustomAlert
+                open={alert?.open}
+                message={alert?.message}
+                severity={alert?.severity}
+                onclose={() => true}
+            />
+
             <Grid
                 container
                 height={'97vh'}

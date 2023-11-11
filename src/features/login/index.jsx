@@ -6,7 +6,7 @@ import {
     Stack,
     TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
@@ -16,12 +16,15 @@ import { useForm } from 'react-hook-form';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { login } from './login.api';
-
+import Loader from '../../components/loader';
+import { useMutation } from 'react-query';
+import { CustomAlert } from '../../components/alert/index.jsx';
+import { Context } from '../../context';
 const LoginScreen = () => {
     const navigate = useNavigate();
-    const Mutation = login();
-
     const [showPassword, setShowPassword] = useState(false);
+    const { alert, setAlert } = useContext(Context);
+
 
     const validationSchema = yup.object().shape({
         email: yup
@@ -43,22 +46,55 @@ const LoginScreen = () => {
         },
     });
 
-    const onSubmit = (data) => {
-        Mutation.mutate(data, {
+    const { mutate: loginMutate, isLoading: loginLoading } = useMutation(
+        login,
+        {
             onSuccess: (response) => {
                 if (response) {
-                    localStorage.setItem('token', response.data.data.token);
+                    localStorage.setItem('token', response?.data?.data?.token);
                     const storedToken = localStorage.getItem('token');
                     if (storedToken) {
+                        setAlert({
+                            open: true,
+                            severity: 'success',
+                            message: 'Login successfull',
+                        });
                         navigate('/dashboard');
                     }
                 }
             },
-        });
+            onError: (error) => {
+
+                setAlert({
+                    open: true,
+                    severity: 'error',
+                    message: 'Something went wrong...!',
+                });
+                return error;
+            },
+        }
+    );
+
+    const onSubmit = (data) => {
+        loginMutate(data);
     };
+
+
+    useEffect(() => {
+        setAlert({ ...alert, open: false });
+    }, []);
 
     return (
         <Container>
+            <Loader load={loginLoading} />
+
+            <CustomAlert
+                open={alert?.open}
+                message={alert?.message}
+                severity={alert?.severity}
+                onclose={() => true}
+            />
+
             <Grid
                 container
                 height={'97vh'}
