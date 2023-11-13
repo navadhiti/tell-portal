@@ -31,7 +31,7 @@ const Header = () => {
                 position="fixed"
                 sx={{
                     backgroundColor: '#FFFFFF',
-                    maxHeight: '60px',
+                    maxHeight: '70px',
                     justifyContent: 'center',
                 }}
             >
@@ -42,18 +42,50 @@ const Header = () => {
                         component="div"
                         sx={{ flexGrow: 1, color: '#034EA1' }}
                     >
-                        <span style={{ color: '#034EA1' }}>Tel</span>
-                        <span style={{ color: '#EC1C24' }}>l</span>
+                        <span
+                            style={{ color: '#034EA1', letterSpacing: '1px' }}
+                        >
+                            Tel
+                        </span>
+                        <span
+                            style={{ color: '#EC1C24', letterSpacing: '1px' }}
+                        >
+                            l
+                        </span>
                         <br />
-                        <div style={{ fontSize: '14px' }}>
-                            <span style={{ color: '#034EA1' }}>
+                        <div style={{ fontSize: '17px' }}>
+                            <span
+                                style={{
+                                    color: '#034EA1',
+                                    letterSpacing: '1px',
+                                }}
+                            >
                                 "Speak like{' '}
                             </span>
-                            <span style={{ color: '#EC1C24' }}>me ..."</span>
-                            <span style={{ color: '#034EA1' }}>
+                            <span
+                                style={{
+                                    color: '#EC1C24',
+                                    letterSpacing: '1px',
+                                }}
+                            >
+                                me ..."
+                            </span>
+                            <span
+                                style={{
+                                    color: '#034EA1',
+                                    letterSpacing: '1px',
+                                }}
+                            >
                                 "Speak with{' '}
                             </span>
-                            <span style={{ color: '#EC1C24' }}>me ..."</span>
+                            <span
+                                style={{
+                                    color: '#EC1C24',
+                                    letterSpacing: '1px',
+                                }}
+                            >
+                                me ..."
+                            </span>
                         </div>
                     </Typography>
 

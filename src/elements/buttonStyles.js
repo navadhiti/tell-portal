@@ -17,6 +17,7 @@ export const PrimaryButton = styled(Button)({
             color: '#ffffff',
         },
         textTransform: 'capitalize',
+        letterSpacing: '2px',
     },
 });
 
@@ -24,7 +25,7 @@ export const SecondaryButton = styled(Button)({
     '&&&': {
         padding: '13px 30px',
         // backgroundColor: '#E0DBE6',
-        border: '1px solid ',
+        border: '1px solid #9ACFD8 ',
         borderRadius: '10px',
         fontFamily: 'Poppins',
         fontSize: '15px',
@@ -33,7 +34,7 @@ export const SecondaryButton = styled(Button)({
         color: '#5C6E7B',
         height: '40px',
         '&:hover': {
-            backgroundColor: '#53C6D9',
+            backgroundColor: 'grey',
             color: '#ffffff',
         },
         textTransform: 'capitalize',

@@ -6,7 +6,7 @@ import {
     createRoutesFromElements,
 } from 'react-router-dom';
 import { lazy } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import Header from './layout/header';
 
 const ProtectedRoute = () => {
@@ -34,6 +34,7 @@ const ProtectedRoute = () => {
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/signup'));
 const Home = lazy(() => import('./pages/home'));
+const Error = lazy(() => import('./components/error'));
 
 export const routes = createBrowserRouter(
     createRoutesFromElements(
@@ -45,7 +46,7 @@ export const routes = createBrowserRouter(
                     <Route
                         path="/dashboard"
                         element={<Home />}
-                        errorElement={<p>error page</p>}
+                        errorElement={<Error />}
                     />
                 </Route>
             </Route>

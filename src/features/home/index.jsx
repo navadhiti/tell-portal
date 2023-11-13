@@ -1,6 +1,7 @@
 import {
     Card,
     CardContent,
+    Chip,
     Container,
     Grid,
     IconButton,
@@ -12,8 +13,19 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useEffect, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import Loader from '../../components/loader';
-import { getQuestionAnswers } from './homeApi';
+import { getQuestionAnswers, valueCalcuate } from './homeApi';
 import Cookies from 'js-cookie';
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined';
+
+const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'en-IN';
+
 const HomeScreen = () => {
     const quiznumber = Cookies.get('quiznumber')
         ? JSON.parse(Cookies.get('quiznumber'))
@@ -32,25 +44,29 @@ const HomeScreen = () => {
         refetch,
     } = getQuestionAnswers(quiznumber);
 
+    const [listening, setListening] = useState(false);
+    const [interimTranscript, setInterimTranscript] = useState('');
+    const [finalTranscript, setFinalTranscript] = useState('');
+    const [transformedWordResult, setTransformedWordResult] = useState(null);
+    const [listeningAnswer, setListeningAnswer] = useState(false);
+    const [transformedAnswerResult, setTransformedAnswerResult] =
+        useState(null);
+    const SpeechedText = finalTranscript.split(' ');
+
     const convertai4bharat = (propText) => {
+        setListening(false);
+        setListeningAnswer(false);
         setLoading(true);
+        setFinalTranscript('');
         settexttospeechaudio('');
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         var payload = JSON.stringify({
-            controlConfig: {
-                dataTracking: true,
-            },
-            input: [
-                {
-                    source: propText,
-                },
-            ],
+            controlConfig: { dataTracking: true },
+            input: [{ source: propText }],
             config: {
                 gender: 'female',
-                language: {
-                    sourceLanguage: 'en',
-                },
+                language: { sourceLanguage: 'en' },
             },
         });
         var requestOptions = {
@@ -70,6 +86,117 @@ const HomeScreen = () => {
                 settexttospeechaudio(audio);
             });
     };
+
+    const handleListen = () => {
+        setListeningAnswer(false);
+        setLoading(true);
+        if (listening) {
+            recognition.start();
+            recognition.onend = () => {
+                recognition.start();
+            };
+        } else {
+            recognition.stop();
+            recognition.onend = () => {
+                return null;
+            };
+        }
+
+        recognition.onstart = () => {
+            return null;
+        };
+
+        recognition.onresult = (event) => {
+            let interim = '';
+            let final = '';
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) final += transcript + ' ';
+                else interim += transcript;
+            }
+            setInterimTranscript(interim);
+            setFinalTranscript(final);
+
+            const data = valueCalcuate(
+                DataQuizAndAnswers?.data?.question,
+                final
+            );
+            setTransformedWordResult(data);
+        };
+
+        recognition.onerror = (event) => {
+            return event;
+        };
+
+        setLoading(false);
+    };
+
+    const toggleListen = () => {
+        settexttospeechaudio('');
+        setFinalTranscript('');
+        setPlaying(1);
+        if (listening == true) {
+            setListening((prevState) => !prevState);
+            setListeningAnswer(false);
+        } else {
+            setListening((prevState) => !prevState);
+            setListeningAnswer(false);
+        }
+    };
+
+    const handleAnswerListen = () => {
+        setLoading(true);
+        const recognitionAnswer = new (window.SpeechRecognition ||
+            window.webkitSpeechRecognition)();
+        recognitionAnswer.continuous = true;
+        recognitionAnswer.interimResults = true;
+        recognitionAnswer.lang = 'en-IN';
+
+        recognitionAnswer.onstart = () => {
+            return null;
+        };
+
+        recognitionAnswer.onresult = (event) => {
+            let interim = '';
+            let final = '';
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) final += transcript + ' ';
+                else interim += transcript;
+            }
+            setInterimTranscript(interim);
+            setFinalTranscript(final);
+            // Use the valueCalcuate function or any logic to process the answer
+            const data = valueCalcuate(DataQuizAndAnswers?.data?.answer, final);
+            // Set the processed data to state
+            setTransformedAnswerResult(data);
+        };
+
+        recognitionAnswer.onerror = (event) => {
+            return event;
+        };
+        recognitionAnswer.start();
+        setLoading(false);
+    };
+
+    const toggleAnswerListen = () => {
+        settexttospeechaudio('');
+        setListening(false);
+        setPlaying(2);
+        setFinalTranscript('');
+        if (listeningAnswer === true) {
+            setListeningAnswer((prevState) => !prevState);
+        } else {
+            setListeningAnswer(true);
+            handleAnswerListen();
+        }
+    };
+
+    useEffect(() => {
+        handleListen();
+    }, [listening]);
 
     useEffect(() => {
         refetch();
@@ -106,23 +233,34 @@ const HomeScreen = () => {
                         <Content
                             color={isSpeaked.question ? 'GrayText' : '#034EA1'}
                         >
-                            {DataQuizAndAnswers?.data?.question}
-                        </Content>
-                        <Stack
-                            direction={'row'}
-                            justifyContent={
-                                texttospeechaudio ? 'flex-end' : 'flex-end'
-                            }
-                            width={'100%'}
-                        >
+                            {' '}
                             {texttospeechaudio && playing === 1 ? (
-                                <ReactAudioPlayer
-                                    src={texttospeechaudio}
-                                    controls
-                                    autoPlay
-                                />
+                                <>
+                                    <ReactAudioPlayer
+                                        src={texttospeechaudio}
+                                        controls
+                                        autoPlay
+                                        style={{ display: 'none' }}
+                                    />
+                                    <Chip
+                                        onClick={() => {
+                                            setPlaying(1);
+                                            setIsSpeaked({
+                                                ...isSpeaked,
+                                                question: true,
+                                            });
+                                            convertai4bharat(
+                                                DataQuizAndAnswers?.data
+                                                    ?.question
+                                            );
+                                        }}
+                                        icon={<VolumeUpIcon fontSize="large" />}
+                                        label="Listen"
+                                        color="primary"
+                                    />
+                                </>
                             ) : (
-                                <IconButton
+                                <Chip
                                     onClick={() => {
                                         setPlaying(1);
                                         setIsSpeaked({
@@ -133,9 +271,74 @@ const HomeScreen = () => {
                                             DataQuizAndAnswers?.data?.question
                                         );
                                     }}
+                                    icon={<VolumeUpIcon fontSize="large" />}
+                                    label="Listen"
+                                    color="primary"
+                                />
+                            )}
+                            <span>
+                                {' '}
+                                {DataQuizAndAnswers?.data?.question} ?{' '}
+                            </span>
+                        </Content>
+
+                        <Stack
+                            mt={2}
+                            direction={'row'}
+                            alignItems={'center'}
+                            justifyContent={'space-between'}
+                            width={'100%'}
+                        >
+                            <Grid
+                                container
+                                alignItems={'center'}
+                                columnGap={1}
+                                justifyContent={'flex-start'}
+                            >
+                                {!listening ? (
+                                    <Chip
+                                        color="secondary"
+                                        id="startaudio"
+                                        onClick={toggleListen}
+                                        icon={
+                                            <KeyboardVoiceIcon fontSize="large" />
+                                        }
+                                        label="Try now"
+                                    />
+                                ) : (
+                                    <Chip
+                                        color="primary"
+                                        onClick={toggleListen}
+                                        id="stopaudio"
+                                        icon={
+                                            <PauseCircleOutlineOutlinedIcon fontSize="large" />
+                                        }
+                                        label="Stop"
+                                    />
+                                )}
+                            </Grid>
+
+                            {playing === 1 && (
+                                <Grid
+                                    flexGrow={1}
+                                    width={'80%'}
+                                    whiteSpace={'nowrap'}
+                                    justifyContent={'flex-start'}
                                 >
-                                    <VolumeUpIcon />
-                                </IconButton>
+                                    {!listening ? (
+                                        <Content color={'GrayText'}>
+                                            {' '}
+                                            <ResultComponent
+                                                speech={SpeechedText}
+                                                result={transformedWordResult}
+                                            />
+                                        </Content>
+                                    ) : (
+                                        <Content color={'GrayText'}>
+                                            Listening...
+                                        </Content>
+                                    )}
+                                </Grid>
                             )}
                         </Stack>
                     </CardContent>
@@ -145,23 +348,35 @@ const HomeScreen = () => {
                         <Content
                             color={isSpeaked.answer ? 'GrayText' : '#034EA1'}
                         >
-                            {DataQuizAndAnswers?.data?.answer}
-                        </Content>
-                        <Stack
-                            direction={'row'}
-                            justifyContent={'flex-end'}
-                            width={'100%'}
-                        >
-                            {' '}
                             {texttospeechaudio && playing === 2 ? (
-                                <ReactAudioPlayer
-                                    src={texttospeechaudio}
-                                    controls
-                                    autoPlay
-                                />
+                                <>
+                                    <ReactAudioPlayer
+                                        src={texttospeechaudio}
+                                        controls
+                                        autoPlay
+                                        style={{ display: 'none' }}
+                                    />
+                                    <Chip
+                                        onClick={() => {
+                                            settexttospeechaudio('');
+                                            setPlaying(2);
+                                            setIsSpeaked({
+                                                ...isSpeaked,
+                                                answer: true,
+                                            });
+                                            convertai4bharat(
+                                                DataQuizAndAnswers?.data?.answer
+                                            );
+                                        }}
+                                        icon={<VolumeUpIcon fontSize="large" />}
+                                        label="Listen"
+                                        color="primary"
+                                    />
+                                </>
                             ) : (
-                                <IconButton
+                                <Chip
                                     onClick={() => {
+                                        settexttospeechaudio('');
                                         setPlaying(2);
                                         setIsSpeaked({
                                             ...isSpeaked,
@@ -171,22 +386,83 @@ const HomeScreen = () => {
                                             DataQuizAndAnswers?.data?.answer
                                         );
                                     }}
+                                    icon={<VolumeUpIcon fontSize="large" />}
+                                    label="Listen"
+                                    color="primary"
+                                />
+                            )}
+                            <span> {DataQuizAndAnswers?.data?.answer} </span>
+                        </Content>
+                        <Stack
+                            mt={2}
+                            direction={'row'}
+                            alignItems={'center'}
+                            justifyContent={'space-between'}
+                            width={'100%'}
+                        >
+                            <Grid
+                                container
+                                alignItems={'center'}
+                                columnGap={1}
+                                justifyContent={'flex-start'}
+                            >
+                                {!listeningAnswer ? (
+                                    <Chip
+                                        color="secondary"
+                                        clickable={true}
+                                        id="startaudio"
+                                        onClick={toggleAnswerListen}
+                                        icon={
+                                            <KeyboardVoiceIcon fontSize="large" />
+                                        }
+                                        label="Try now"
+                                    />
+                                ) : (
+                                    <Chip
+                                        color="primary"
+                                        onClick={toggleAnswerListen}
+                                        id="stopaudio"
+                                        icon={
+                                            <PauseCircleOutlineOutlinedIcon fontSize="large" />
+                                        }
+                                        label="Stop"
+                                    />
+                                )}
+                            </Grid>
+
+                            {playing === 2 && (
+                                <Grid
+                                    flexGrow={1}
+                                    width={'80%'}
+                                    whiteSpace={'nowrap'}
+                                    justifyContent={'flex-start'}
                                 >
-                                    <VolumeUpIcon />
-                                </IconButton>
+                                    {!listeningAnswer ? (
+                                        <Content color={'GrayText'}>
+                                            {' '}
+                                            <ResultComponent
+                                                speech={SpeechedText}
+                                                result={transformedAnswerResult}
+                                            />
+                                        </Content>
+                                    ) : (
+                                        <Content color={'GrayText'}>
+                                            Listening...
+                                        </Content>
+                                    )}
+                                </Grid>
                             )}
                         </Stack>
                     </CardContent>
-
-                    <Stack
-                        direction={'row'}
-                        width={'80%'}
-                        alignItems={'center'}
-                        justifyContent={
-                            quizNo > 1 ? 'space-between' : 'flex-end'
-                        }
-                    >
-                        {quizNo > 1 && (
+                </Card>
+                <Stack
+                    direction={'row'}
+                    width={quizNo > 1 ? '80%' : '80%'}
+                    alignItems={'center'}
+                    justifyContent={quizNo > 1 ? 'space-between' : 'flex-end'}
+                >
+                    {quizNo > 1 && (
+                        <>
                             <SecondaryButton
                                 onClick={() => {
                                     if (!quizNo <= 0) {
@@ -200,38 +476,83 @@ const HomeScreen = () => {
                                             answer: false,
                                             question: false,
                                         });
+                                        setFinalTranscript('');
                                     }
                                 }}
                             >
                                 Previous
                             </SecondaryButton>
-                        )}
 
-                        <PrimaryButton
-                            disabled={
-                                DataQuizAndAnswers?.data?.totalQuestions <=
-                                quizNo
-                            }
-                            onClick={() => {
-                                settexttospeechaudio('');
-                                Cookies.set('quiznumber', quiznumber + 1);
-                                setQuizNo(quizNo + 1);
-                                setIsSpeaked({
-                                    answer: false,
-                                    question: false,
-                                });
-                            }}
-                        >
-                            {' '}
-                            {DataQuizAndAnswers?.data?.totalQuestions === quizNo
-                                ? 'Completed'
-                                : 'Next'}
-                        </PrimaryButton>
-                    </Stack>
-                </Card>
+                            <PrimaryButton
+                                onClick={() => {
+                                    settexttospeechaudio('');
+                                    Cookies.set('quiznumber', 1);
+                                    setQuizNo(1);
+                                    setIsSpeaked({
+                                        answer: false,
+                                        question: false,
+                                    });
+                                    setFinalTranscript('');
+                                }}
+                            >
+                                {' '}
+                                {'Start Over'}
+                            </PrimaryButton>
+                        </>
+                    )}
+                    <PrimaryButton
+                        disabled={
+                            DataQuizAndAnswers?.data?.totalQuestions <= quizNo
+                        }
+                        onClick={() => {
+                            settexttospeechaudio('');
+                            Cookies.set('quiznumber', quiznumber + 1);
+                            setQuizNo(quizNo + 1);
+                            setIsSpeaked({
+                                answer: false,
+                                question: false,
+                            });
+                            setFinalTranscript('');
+                        }}
+                    >
+                        {' '}
+                        {DataQuizAndAnswers?.data?.totalQuestions === quizNo
+                            ? 'Completed'
+                            : 'Next'}
+                    </PrimaryButton>
+                </Stack>
             </Grid>
         </Container>
     );
 };
 
 export default HomeScreen;
+
+const ResultComponent = ({ result, speech }) => {
+    const { word_result_array } = result ? result : [];
+    const speechArray = speech ? speech : [];
+
+    const getWordColor = (word) => {
+        if (word_result_array?.matched.includes(word)) {
+            return 'green';
+        } else if (word_result_array?.mismatched.includes(word)) {
+            return 'red';
+        } else if (word_result_array?.order.includes(word)) {
+            return 'orange';
+        }
+        // Default color if word does not belong to any category
+        return 'black';
+    };
+
+    return (
+        <div>
+            <p>
+                {speechArray?.map((word, index) => (
+                    <span key={index} style={{ color: getWordColor(word) }}>
+                        {word}&nbsp;
+                    </span>
+                ))}
+            </p>
+        </div>
+    );
+};
