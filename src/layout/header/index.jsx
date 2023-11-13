@@ -9,7 +9,6 @@ import {
     Toolbar,
     Typography,
 } from '@mui/material';
-inside;
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
