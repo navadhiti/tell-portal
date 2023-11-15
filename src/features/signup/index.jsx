@@ -1,9 +1,11 @@
-import { Container, Grid, Stack, TextField } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import { Container, Grid, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
 import { yupResolver } from '@hookform/resolvers/yup';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { signup } from './signup.api';
@@ -15,6 +17,8 @@ import { CustomAlert } from '../../components/alert';
 const SignUpScreen = () => {
     const navigate = useNavigate();
     const { alert, setAlert } = useContext(Context);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
@@ -54,24 +58,35 @@ const SignUpScreen = () => {
         {
             onSuccess: (response) => {
                 if (response) {
+                    const statusCode = response?.data?.statusCode;
                     localStorage.setItem('token', response.data.data.token);
-                    const storedToken = localStorage.getItem('token');
-                    if (storedToken) {
-                        setAlert({
+                    if (statusCode === 200) {
+                        let alertData = {
                             open: true,
                             severity: 'success',
-                            message: 'Signup successfull',
-                        });
+                            message: response?.data?.message || 'Signup successful',
+                        };
+                        setAlert(alertData);
                         navigate('/dashboard');
                     }
                 }
             },
+            
             onError: (error) => {
-                setAlert({
-                    open: true,
-                    severity: 'error',
-                    message: 'Something went wrong...!',
-                });
+                if (error?.response?.data) {
+                    const errorMessage = error.response.data.message || 'Something went wrong...!';
+                    setAlert({
+                        open: true,
+                        severity: 'warning',
+                        message: errorMessage,
+                    });
+                } else {
+                    setAlert({
+                        open: true,
+                        severity: 'error',
+                        message: 'Something went wrong...!',
+                    });
+                }
                 return error;
             },
         }
@@ -173,19 +188,40 @@ const SignUpScreen = () => {
 
                                 <Stack>
                                     <TextField
-                                        type="password"
+                                        type={
+                                            showPassword ? 'text' : 'password'
+                                        }
                                         label="Password"
                                         {...register('password', {
                                             required: true,
                                         })}
                                         variant="outlined"
                                         fullWidth
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton 
+                                                        onClick={() =>
+                                                            setShowPassword(
+                                                                !showPassword
+                                                            )
+                                                        }
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? (
+                                                            <VisibilityIcon fontSize="small" />
+                                                        ) : (
+                                                            <VisibilityOffIcon fontSize="small" />
+                                                        )}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                     <ErrorToast
                                         error={errors.password?.message}
                                     />
                                 </Stack>
-
                                 <PrimaryButton
                                     sx={{ mt: 1 }}
                                     type="submit"

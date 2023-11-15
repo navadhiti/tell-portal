@@ -48,30 +48,43 @@ const LoginScreen = () => {
     const { mutate: loginMutate, isLoading: loginLoading } = useMutation(
         login,
         {
-            onSuccess: (response) => {
-                if (response) {
-                    localStorage.setItem('token', response?.data?.data?.token);
-                    const storedToken = localStorage.getItem('token');
-                    if (storedToken) {
-                        setAlert({
-                            open: true,
-                            severity: 'success',
-                            message: 'Login successfull',
-                        });
-                        navigate('/dashboard');
-                    }
+        onSuccess: (response) => {
+            if (response) {
+                const statusCode = response?.data?.statusCode;
+                localStorage.setItem('token', response.data.data.token);
+                if (statusCode === 200) {
+                    let alertData = {
+                        open: true,
+                        severity: 'success',
+                        message: response?.data?.message || 'Login successful',
+                    };
+                    setAlert(alertData);
+                    navigate('/dashboard');
                 }
-            },
-            onError: (error) => {
+            }
+        },
+        
+        onError: (error) => {
+            if (error?.response?.data) {
+                const errorMessage = error.response.data.message || 'Something went wrong...!';
+                setAlert({
+                    open: true,
+                    severity: 'warning',
+                    message: errorMessage,
+                });
+            } else {
                 setAlert({
                     open: true,
                     severity: 'error',
                     message: 'Something went wrong...!',
                 });
-                return error;
-            },
-        }
+            }
+            return error;
+        },
+    }
     );
+    
+    
 
     const onSubmit = (data) => {
         loginMutate(data);
