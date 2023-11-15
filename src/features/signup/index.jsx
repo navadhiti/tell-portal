@@ -1,4 +1,11 @@
-import { Container, Grid, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import {
+    Container,
+    Grid,
+    IconButton,
+    InputAdornment,
+    Stack,
+    TextField,
+} from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
@@ -18,7 +25,6 @@ const SignUpScreen = () => {
     const navigate = useNavigate();
     const { alert, setAlert } = useContext(Context);
     const [showPassword, setShowPassword] = useState(false);
-
 
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
@@ -64,17 +70,20 @@ const SignUpScreen = () => {
                         let alertData = {
                             open: true,
                             severity: 'success',
-                            message: response?.data?.message || 'Signup successful',
+                            message:
+                                response?.data?.message || 'Signup successful',
                         };
                         setAlert(alertData);
                         navigate('/dashboard');
                     }
                 }
             },
-            
+
             onError: (error) => {
                 if (error?.response?.data) {
-                    const errorMessage = error.response.data.message || 'Something went wrong...!';
+                    const errorMessage =
+                        error.response.data.message ||
+                        'Something went wrong...!';
                     setAlert({
                         open: true,
                         severity: 'warning',
@@ -200,7 +209,7 @@ const SignUpScreen = () => {
                                         InputProps={{
                                             endAdornment: (
                                                 <InputAdornment position="end">
-                                                    <IconButton 
+                                                    <IconButton
                                                         onClick={() =>
                                                             setShowPassword(
                                                                 !showPassword

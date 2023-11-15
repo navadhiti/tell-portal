@@ -8,13 +8,14 @@ export const getQuestionAnswers = (quiznumber) => {
         queryFn: async () => {
             try {
                 await tokenExpires();
-                const response = await headerWithToken.get(`/api/admin/getAllQA?index=${quiznumber}`);
+                const response = await headerWithToken.get(
+                    `/api/admin/getAllQA?index=${quiznumber}`
+                );
                 return response.data;
-                }
-                catch(response){
-                    return response?.response?.data;
-                }
-            },
+            } catch (response) {
+                return response?.response?.data;
+            }
+        },
         keepPreviousData: true,
     });
 };

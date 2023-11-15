@@ -11,11 +11,9 @@ headerWithToken.interceptors.request.use((config) => {
 
 export const tokenExpires = async () => {
     try {
-        await headerWithToken.get(`/api/admin/getAllQA?index=1`);
-
+        await headerWithToken.get('/api/admin/getAllQA?index=1');
     } catch (error) {
-        localStorage.removeItem("token");
-        window.location.reload()
+        localStorage.removeItem('token');
+        window.location.reload();
     }
 };
-    
