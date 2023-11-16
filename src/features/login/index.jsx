@@ -49,39 +49,23 @@ const LoginScreen = () => {
         login,
         {
             onSuccess: (response) => {
-                if (response) {
-                    const statusCode = response?.data?.statusCode;
-                    localStorage.setItem('token', response.data.data.token);
-                    if (statusCode === 200) {
-                        let alertData = {
-                            open: true,
-                            severity: 'success',
-                            message:
-                                response?.data?.message || 'Login successful',
-                        };
-                        setAlert(alertData);
-                        navigate('/dashboard');
-                    }
+                if (response?.data?.responseObj?.responseCode == 200) {
+                    const token = response?.data?.responseObj?.responseDataParams?.data?.token;
+                    setAlert({ open: true, severity: 'success', message: response?.data?.responseObj?.responseMessage })
+                    localStorage.setItem('token', token);
+                    navigate('/dashboard');
+                }else{
+                    setAlert({ open: true, severity: 'warning', message: response?.data?.responseObj?.responseMessage})
+ 
                 }
             },
 
             onError: (error) => {
-                if (error?.response?.data) {
-                    const errorMessage =
-                        error.response.data.message ||
-                        'Something went wrong...!';
-                    setAlert({
-                        open: true,
-                        severity: 'warning',
-                        message: errorMessage,
-                    });
-                } else {
-                    setAlert({
-                        open: true,
-                        severity: 'error',
-                        message: 'Something went wrong...!',
-                    });
-                }
+                setAlert({
+                    open: true,
+                    severity: 'error',
+                    message: 'Something went wrong...!',
+                });
                 return error;
             },
         }
