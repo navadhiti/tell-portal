@@ -32,5 +32,6 @@ export const Content = styled(Typography)({
         fontSize: '19px',
         fontWeight: '600',
         lineHeight: '30px',
+        textAlign: 'start',
     },
 });

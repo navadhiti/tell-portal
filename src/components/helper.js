@@ -67,24 +67,6 @@ export function replaceAll(string, search, replace) {
 }
 
 export function compareArrays(arr1, arr2) {
-    // let words_result = [];
-
-    // // Check if arrays have the same length
-    // if (arr1.length !== arr2.length) {
-    //   words_result.push('red');
-    //   return words_result;
-    // }
-
-    // // Iterate over each element and compare
-    // for (let i = 0; i < arr1.length; i++) {
-    //   if (arr1[i] === arr2[i]) {
-    //     words_result.push('green');
-    //   } else {
-    //     words_result.push('orange');
-    //   }
-    // }
-
-    // return words_result;
     const result = {
         matched: [],
         mismatched: [],
