@@ -1,9 +1,18 @@
-import { Container, Grid, Stack, TextField } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import {
+    Container,
+    Grid,
+    IconButton,
+    InputAdornment,
+    Stack,
+    TextField,
+} from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModelHeader } from '../../elements/textStyles';
 import { PrimaryButton } from '../../elements/buttonStyles';
 import { yupResolver } from '@hookform/resolvers/yup';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { signup } from './signup.api';
@@ -15,13 +24,21 @@ import { CustomAlert } from '../../components/alert';
 const SignUpScreen = () => {
     const navigate = useNavigate();
     const { alert, setAlert } = useContext(Context);
+    const [showPassword, setShowPassword] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (e) => {
+        const newValue = e.target.value.slice(0, 10); // Take only the first 10 characters
+        setInputValue(newValue);
+    };
 
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
         email: yup
             .string()
             .email('Invalid email')
-            .required('Email is required'),
+            .required('Email is required')
+            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
         phoneNumber: yup
             .string()
             .required('Phone Number is required')
@@ -53,19 +70,26 @@ const SignUpScreen = () => {
         signup,
         {
             onSuccess: (response) => {
-                if (response) {
-                    localStorage.setItem('token', response.data.data.token);
-                    const storedToken = localStorage.getItem('token');
-                    if (storedToken) {
-                        setAlert({
-                            open: true,
-                            severity: 'success',
-                            message: 'Signup successfull',
-                        });
-                        navigate('/dashboard');
-                    }
+                if (response?.data?.responseObj?.responseCode === 200) {
+                    const token =
+                        response?.data?.responseObj?.responseDataParams?.data
+                            ?.token;
+                    setAlert({
+                        open: true,
+                        severity: 'success',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
+                    localStorage.setItem('token', token);
+                    navigate('/dashboard');
+                } else {
+                    setAlert({
+                        open: true,
+                        severity: 'warning',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
                 }
             },
+
             onError: (error) => {
                 setAlert({
                     open: true,
@@ -159,12 +183,18 @@ const SignUpScreen = () => {
                                 <Stack>
                                     <TextField
                                         type="Number"
-                                        label="Phone Number"
+                                        label="Phone number"
                                         {...register('phoneNumber', {
                                             required: true,
-                                        })}
+                                        })} 
                                         variant="outlined"
                                         fullWidth
+                                        value={inputValue}
+                                        onChange={handleInputChange}
+                                        maxLength={10}
+
+                                        onKeyDown={(e) => (e.key === 'e' || e.key === '.' || e.key === '-' || e.key === ',') && e.preventDefault()}
+
                                     />
                                     <ErrorToast
                                         error={errors.phoneNumber?.message}
@@ -173,19 +203,40 @@ const SignUpScreen = () => {
 
                                 <Stack>
                                     <TextField
-                                        type="password"
+                                        type={
+                                            showPassword ? 'text' : 'password'
+                                        }
                                         label="Password"
                                         {...register('password', {
                                             required: true,
                                         })}
                                         variant="outlined"
                                         fullWidth
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            setShowPassword(
+                                                                !showPassword
+                                                            )
+                                                        }
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? (
+                                                            <VisibilityIcon fontSize="small" />
+                                                        ) : (
+                                                            <VisibilityOffIcon fontSize="small" />
+                                                        )}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }}
                                     />
                                     <ErrorToast
                                         error={errors.password?.message}
                                     />
                                 </Stack>
-
                                 <PrimaryButton
                                     sx={{ mt: 1 }}
                                     type="submit"
@@ -193,7 +244,7 @@ const SignUpScreen = () => {
                                     color="primary"
                                     fullWidth
                                 >
-                                    Sign In
+                                    Sign Up
                                 </PrimaryButton>
                             </form>
                             <Stack

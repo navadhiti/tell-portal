@@ -29,7 +29,8 @@ const LoginScreen = () => {
         email: yup
             .string()
             .email('Invalid email')
-            .required('Email is required'),
+            .required('Email is required')
+            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
         password: yup.string().required('Password is required'),
     });
 
@@ -49,19 +50,26 @@ const LoginScreen = () => {
         login,
         {
             onSuccess: (response) => {
-                if (response) {
-                    localStorage.setItem('token', response?.data?.data?.token);
-                    const storedToken = localStorage.getItem('token');
-                    if (storedToken) {
-                        setAlert({
-                            open: true,
-                            severity: 'success',
-                            message: 'Login successfull',
-                        });
-                        navigate('/dashboard');
-                    }
+                if (response?.data?.responseObj?.responseCode == 200) {
+                    const token =
+                        response?.data?.responseObj?.responseDataParams?.data
+                            ?.token;
+                    setAlert({
+                        open: true,
+                        severity: 'success',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
+                    localStorage.setItem('token', token);
+                    navigate('/dashboard');
+                } else {
+                    setAlert({
+                        open: true,
+                        severity: 'warning',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
                 }
             },
+
             onError: (error) => {
                 setAlert({
                     open: true,
@@ -120,7 +128,7 @@ const LoginScreen = () => {
                             direction="column"
                             rowGap={'20px'}
                         >
-                            <ModelHeader>LOGIN</ModelHeader>
+                            <ModelHeader >LOGIN</ModelHeader>
                             <form
                                 onSubmit={handleSubmit(onSubmit)}
                                 style={{

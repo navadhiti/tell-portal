@@ -66,7 +66,10 @@ export function replaceAll(string, search, replace) {
     return string.split(search).join(replace);
 }
 
+
+
 export function compareArrays(arr1, arr2) {
+    
     const result = {
         matched: [],
         mismatched: [],

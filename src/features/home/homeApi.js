@@ -1,19 +1,21 @@
 import { useQuery } from 'react-query';
-import { headerWithToken } from '../../api';
+import { headerWithToken, tokenExpires } from '../../api';
 import { compareArrays, replaceAll } from '../../components/helper';
 
 export const getQuestionAnswers = (quiznumber) => {
     return useQuery({
         queryKey: ['getQuestionAnswers', quiznumber],
-        queryFn: () =>
-            headerWithToken
-                .get(`/api/admin/getAllQA?index=${quiznumber}`)
-                .then((response) => {
-                    return response.data;
-                })
-                .catch((response) => {
-                    return response?.response?.data;
-                }),
+        queryFn: async () => {
+            try {
+                await tokenExpires();
+                const response = await headerWithToken.get(
+                    `/api/admin/getAllQA?index=${quiznumber}`
+                );
+                return response.data;
+            } catch (response) {
+                return response?.response?.data;
+            }
+        },
         keepPreviousData: true,
     });
 };
