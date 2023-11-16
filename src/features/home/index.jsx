@@ -10,7 +10,6 @@ import {
     Menu,
     MenuItem,
     MenuList,
-    Paper,
     Radio,
     Stack,
 } from '@mui/material';
