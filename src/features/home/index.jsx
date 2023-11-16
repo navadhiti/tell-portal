@@ -1,4 +1,19 @@
-import { Card, CardContent, Chip, Container, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, MenuList, Paper, Radio, Stack } from '@mui/material';
+import {
+    Card,
+    CardContent,
+    Chip,
+    Container,
+    Divider,
+    Grid,
+    IconButton,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    MenuList,
+    Paper,
+    Radio,
+    Stack,
+} from '@mui/material';
 import { PrimaryButton, SecondaryButton } from '../../elements/buttonStyles';
 import { Content, SubHeader } from '../../elements/textStyles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -12,7 +27,12 @@ import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutli
 import ResultDialog from '../../components/result';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { femaleAudioAnswer, femaleVoiceQuestion, maleAudioAnswer, maleAudioQuestions } from './audioFiles';
+import {
+    femaleAudioAnswer,
+    femaleVoiceQuestion,
+    maleAudioAnswer,
+    maleAudioQuestions,
+} from './audioFiles';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 
 import React from 'react';
@@ -51,32 +71,31 @@ const HomeScreen = () => {
         refetch,
     } = getQuestionAnswers(quiznumber);
 
-
     const [listening, setListening] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [interimTranscript, setInterimTranscript] = useState('');
     const [finalTranscript, setFinalTranscript] = useState('');
     const [transformedWordResult, setTransformedWordResult] = useState(null);
     const [listeningAnswer, setListeningAnswer] = useState(false);
-    const [transformedAnswerResult, setTransformedAnswerResult] = useState(null);
+    const [transformedAnswerResult, setTransformedAnswerResult] =
+        useState(null);
     const SpeechedText = finalTranscript.split(' ');
     const [resultInPercentage, setResultInPercentage] = useState();
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [voice, setVoice] = useState(localStorage.getItem('voice'));
 
-    const audioQuestions = voice === 'male' ? maleAudioQuestions : femaleVoiceQuestion;
+    const audioQuestions =
+        voice === 'male' ? maleAudioQuestions : femaleVoiceQuestion;
     const audioAnswers = voice === 'male' ? maleAudioAnswer : femaleAudioAnswer;
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-
     const handleClose = () => {
         setAnchorEl(null);
         setOpen(false);
     };
-
 
     const convertai4bharat = (propText) => {
         setListening(false);
@@ -131,11 +150,15 @@ const HomeScreen = () => {
                 setInterimTranscript(interim);
                 setFinalTranscript(final);
 
-                const data = valueCalcuate(DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.question, final);
+                const data = valueCalcuate(
+                    DataQuizAndAnswers?.responseObj?.responseDataParams?.data
+                        ?.question,
+                    final
+                );
                 setTransformedWordResult(data);
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
-                        data?.result_in_percentage === 100
+                    data?.result_in_percentage === 100
                         ? '90'
                         : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
@@ -176,7 +199,7 @@ const HomeScreen = () => {
                 setTransformedAnswerResult(data);
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
-                        data?.result_in_percentage === 100
+                    data?.result_in_percentage === 100
                         ? '93'
                         : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
@@ -253,15 +276,14 @@ const HomeScreen = () => {
                     }}
                     elevation={6}
                 >
-                    <IconButton size='large' sx={{ justifySelf: 'flex-end', alignSelf: 'flex-end' }}
+                    <IconButton
+                        size="large"
+                        sx={{ justifySelf: 'flex-end', alignSelf: 'flex-end' }}
                         onClick={handleMenu}
                         color="inherit"
                     >
                         <RecordVoiceOverIcon />
                     </IconButton>
-
-
-
 
                     <Menu
                         id="menu-appbar"
@@ -270,12 +292,15 @@ const HomeScreen = () => {
                         onClose={handleClose}
                     >
                         <MenuList>
-                            <MenuItem sx={{ height: '30px' }} onClick={() => {
-                                setVoice('male');
-                                localStorage.setItem('voice', 'male');
-                                setPlaying(0);
-                                setAnchorEl(null);
-                            }}>
+                            <MenuItem
+                                sx={{ height: '30px' }}
+                                onClick={() => {
+                                    setVoice('male');
+                                    localStorage.setItem('voice', 'male');
+                                    setPlaying(0);
+                                    setAnchorEl(null);
+                                }}
+                            >
                                 <ListItemIcon>
                                     <Radio checked={voice === 'male'} />
                                 </ListItemIcon>
@@ -283,13 +308,15 @@ const HomeScreen = () => {
                             </MenuItem>
 
                             <Divider />
-                            <MenuItem sx={{ height: '30px' }}
+                            <MenuItem
+                                sx={{ height: '30px' }}
                                 onClick={() => {
                                     setVoice('female');
                                     localStorage.setItem('voice', 'female');
                                     setPlaying(0);
                                     setAnchorEl(null);
-                                }}>
+                                }}
+                            >
                                 <ListItemIcon>
                                     <Radio checked={voice === 'female'} />
                                 </ListItemIcon>
@@ -297,9 +324,6 @@ const HomeScreen = () => {
                             </MenuItem>
                         </MenuList>
                     </Menu>
-
-
-
 
                     <CardContent
                         sx={{
@@ -316,15 +340,19 @@ const HomeScreen = () => {
                             {texttospeechaudio && playing === 1 ? (
                                 <>
                                     {audioQuestions.map((data, index) => {
-
-                                        return data.id === DataQuizAndAnswers?.responseObj?.responseDataParams?.data?._id && (
-                                            <ReactAudioPlayer key={index}
-                                                src={data?.mp3File}
-                                                controls
-                                                autoPlay
-                                                style={{ display: 'none' }
-                                                }
-                                            />
+                                        return (
+                                            data.id ===
+                                                DataQuizAndAnswers?.responseObj
+                                                    ?.responseDataParams?.data
+                                                    ?._id && (
+                                                <ReactAudioPlayer
+                                                    key={index}
+                                                    src={data?.mp3File}
+                                                    controls
+                                                    autoPlay
+                                                    style={{ display: 'none' }}
+                                                />
+                                            )
                                         );
                                     })}
                                     <Chip
@@ -391,7 +419,8 @@ const HomeScreen = () => {
                                             onClick={toggleListen}
                                             icon={
                                                 <KeyboardVoiceIcon fontSize="medium" />
-                                            } sx={{ fontWeight: 'bold' }}
+                                            }
+                                            sx={{ fontWeight: 'bold' }}
                                             label="Try now"
                                         />
                                     ) : (
@@ -402,7 +431,8 @@ const HomeScreen = () => {
                                             icon={
                                                 <PauseCircleOutlineOutlinedIcon fontSize="medium" />
                                             }
-                                            label="Stop" sx={{ fontWeight: 'bold' }}
+                                            label="Stop"
+                                            sx={{ fontWeight: 'bold' }}
                                         />
                                     )}
                                 </Grid>
@@ -439,14 +469,19 @@ const HomeScreen = () => {
                             {texttospeechaudio && playing === 2 ? (
                                 <>
                                     {audioAnswers.map((data, index) => {
-                                        return data.id === DataQuizAndAnswers?.responseObj?.responseDataParams?.data?._id && (
-                                            <ReactAudioPlayer key={index}
-                                                src={data.mp3File}
-                                                controls
-                                                autoPlay
-                                                style={{ display: 'none' }
-                                                }
-                                            />
+                                        return (
+                                            data.id ===
+                                                DataQuizAndAnswers?.responseObj
+                                                    ?.responseDataParams?.data
+                                                    ?._id && (
+                                                <ReactAudioPlayer
+                                                    key={index}
+                                                    src={data.mp3File}
+                                                    controls
+                                                    autoPlay
+                                                    style={{ display: 'none' }}
+                                                />
+                                            )
                                         );
                                     })}
                                     <Chip
@@ -515,7 +550,8 @@ const HomeScreen = () => {
                                             onClick={toggleAnswerListen}
                                             icon={
                                                 <KeyboardVoiceIcon fontSize="medium" />
-                                            } sx={{ fontWeight: 'bold' }}
+                                            }
+                                            sx={{ fontWeight: 'bold' }}
                                             label="Try now"
                                         />
                                     ) : (
@@ -528,7 +564,8 @@ const HomeScreen = () => {
                                             icon={
                                                 <PauseCircleOutlineOutlinedIcon fontSize="medium" />
                                             }
-                                            label="Stop" sx={{ fontWeight: 'bold' }}
+                                            label="Stop"
+                                            sx={{ fontWeight: 'bold' }}
                                         />
                                     )}
                                 </Grid>
@@ -559,7 +596,8 @@ const HomeScreen = () => {
                 </Card>
 
                 <Stack
-                    columnGap={'10px'} rowGap={'10px'}
+                    columnGap={'10px'}
+                    rowGap={'10px'}
                     direction={{ sm: 'row' }}
                     width={quizNo > 1 ? '80%' : '80%'}
                     alignItems={'center'}
@@ -605,7 +643,8 @@ const HomeScreen = () => {
                     )}
                     <PrimaryButton
                         disabled={
-                            DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.totalQuestions <= quizNo
+                            DataQuizAndAnswers?.responseObj?.responseDataParams
+                                ?.data?.totalQuestions <= quizNo
                         }
                         onClick={() => {
                             settexttospeechaudio('');
@@ -619,9 +658,15 @@ const HomeScreen = () => {
                         }}
                     >
                         {' '}
-                        {DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.totalQuestions === quizNo
-                            ? 'Completed'
-                            : <>Next<ArrowForwardIcon /></>}
+                        {DataQuizAndAnswers?.responseObj?.responseDataParams
+                            ?.data?.totalQuestions === quizNo ? (
+                            'Completed'
+                        ) : (
+                            <>
+                                Next
+                                <ArrowForwardIcon />
+                            </>
+                        )}
                     </PrimaryButton>
                 </Stack>
             </Grid>
@@ -651,7 +696,6 @@ export default HomeScreen;
 
 // eslint-disable-next-line react/prop-types
 const ResultComponent = ({ result, speech }) => {
-
     const { word_result_array } = result ? result : [];
     const speechArray = speech ? speech : [];
 
@@ -665,8 +709,6 @@ const ResultComponent = ({ result, speech }) => {
         }
         return 'green';
     };
-
-
 
     return (
         <>

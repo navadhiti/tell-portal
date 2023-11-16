@@ -38,7 +38,10 @@ const SignUpScreen = () => {
             .string()
             .email('Invalid email')
             .required('Email is required')
-            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
+            .matches(
+                /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/,
+                'Incorrect email'
+            ),
         phoneNumber: yup
             .string()
             .required('Phone Number is required')
@@ -186,15 +189,19 @@ const SignUpScreen = () => {
                                         label="Phone number"
                                         {...register('phoneNumber', {
                                             required: true,
-                                        })} 
+                                        })}
                                         variant="outlined"
                                         fullWidth
                                         value={inputValue}
                                         onChange={handleInputChange}
                                         maxLength={10}
-
-                                        onKeyDown={(e) => (e.key === 'e' || e.key === '.' || e.key === '-' || e.key === ',') && e.preventDefault()}
-
+                                        onKeyDown={(e) =>
+                                            (e.key === 'e' ||
+                                                e.key === '.' ||
+                                                e.key === '-' ||
+                                                e.key === ',') &&
+                                            e.preventDefault()
+                                        }
                                     />
                                     <ErrorToast
                                         error={errors.phoneNumber?.message}

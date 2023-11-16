@@ -33,6 +33,5 @@ export const Content = styled(Typography)({
         lineHeight: '30px',
         textAlign: 'start',
         textTransform: 'capitalize',
-
     },
 });

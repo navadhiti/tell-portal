@@ -31,128 +31,126 @@ import mq5 from '../../asset/question/male/mq5.mp3';
 import mq6 from '../../asset/question/male/mq6.mp3';
 import mq7 from '../../asset/question/male/mq7.mp3';
 
-
 export const maleAudioQuestions = [
-     {
-          'id': '6555c4d1fe134b47d29f81a1',
-          'mp3File': mq1
-     }, {
-          'id': '6555c530fe134b47d29f81a3',
-          'mp3File': mq2
-
-     }, {
-          'id': '6555c544fe134b47d29f81a5',
-          'mp3File': mq3
-
-     }, {
-          'id': '6555c55afe134b47d29f81a9',
-          'mp3File': mq4
-
-     }, {
-          'id': '6555c573fe134b47d29f81ad',
-          'mp3File': mq5
-
-     }, {
-          'id': '6555c587fe134b47d29f81af',
-          'mp3File': mq6
-
-     }, {
-          'id': '6555c642fe134b47d29f820f',
-          'mp3File': mq7
-     },
+    {
+        id: '6555c4d1fe134b47d29f81a1',
+        mp3File: mq1,
+    },
+    {
+        id: '6555c530fe134b47d29f81a3',
+        mp3File: mq2,
+    },
+    {
+        id: '6555c544fe134b47d29f81a5',
+        mp3File: mq3,
+    },
+    {
+        id: '6555c55afe134b47d29f81a9',
+        mp3File: mq4,
+    },
+    {
+        id: '6555c573fe134b47d29f81ad',
+        mp3File: mq5,
+    },
+    {
+        id: '6555c587fe134b47d29f81af',
+        mp3File: mq6,
+    },
+    {
+        id: '6555c642fe134b47d29f820f',
+        mp3File: mq7,
+    },
 ];
-
 
 export const femaleVoiceQuestion = [
-     {
-          'id': '6555c4d1fe134b47d29f81a1',
-          'mp3File': fq1
-     }, {
-          'id': '6555c530fe134b47d29f81a3',
-          'mp3File': fq2
-
-     }, {
-          'id': '6555c544fe134b47d29f81a5',
-          'mp3File': fq3
-
-     }, {
-          'id': '6555c55afe134b47d29f81a9',
-          'mp3File': fq4
-
-     }, {
-          'id': '6555c573fe134b47d29f81ad',
-          'mp3File': fq5
-
-     }, {
-          'id': '6555c587fe134b47d29f81af',
-          'mp3File': fq6
-
-     }, {
-          'id': '6555c642fe134b47d29f820f',
-          'mp3File': fq7
-
-     },
+    {
+        id: '6555c4d1fe134b47d29f81a1',
+        mp3File: fq1,
+    },
+    {
+        id: '6555c530fe134b47d29f81a3',
+        mp3File: fq2,
+    },
+    {
+        id: '6555c544fe134b47d29f81a5',
+        mp3File: fq3,
+    },
+    {
+        id: '6555c55afe134b47d29f81a9',
+        mp3File: fq4,
+    },
+    {
+        id: '6555c573fe134b47d29f81ad',
+        mp3File: fq5,
+    },
+    {
+        id: '6555c587fe134b47d29f81af',
+        mp3File: fq6,
+    },
+    {
+        id: '6555c642fe134b47d29f820f',
+        mp3File: fq7,
+    },
 ];
-
 
 export const maleAudioAnswer = [
-     {
-          'id': '6555c4d1fe134b47d29f81a1',
-          'mp3File': ma1
-     }, {
-          'id': '6555c530fe134b47d29f81a3',
-          'mp3File': ma2
-
-     }, {
-          'id': '6555c544fe134b47d29f81a5',
-          'mp3File': ma3
-
-     }, {
-          'id': '6555c55afe134b47d29f81a9',
-          'mp3File': ma4
-
-     }, {
-          'id': '6555c573fe134b47d29f81ad',
-          'mp3File': ma5
-
-     }, {
-          'id': '6555c587fe134b47d29f81af',
-          'mp3File': ma6
-
-     }, {
-          'id': '6555c642fe134b47d29f820f',
-          'mp3File': ma7
-     },
+    {
+        id: '6555c4d1fe134b47d29f81a1',
+        mp3File: ma1,
+    },
+    {
+        id: '6555c530fe134b47d29f81a3',
+        mp3File: ma2,
+    },
+    {
+        id: '6555c544fe134b47d29f81a5',
+        mp3File: ma3,
+    },
+    {
+        id: '6555c55afe134b47d29f81a9',
+        mp3File: ma4,
+    },
+    {
+        id: '6555c573fe134b47d29f81ad',
+        mp3File: ma5,
+    },
+    {
+        id: '6555c587fe134b47d29f81af',
+        mp3File: ma6,
+    },
+    {
+        id: '6555c642fe134b47d29f820f',
+        mp3File: ma7,
+    },
 ];
 
-
-
 export const femaleAudioAnswer = [
-     {
-          'id': '6555c4d1fe134b47d29f81a1',
-          'mp3File': fa1
-     }, {
-          'id': '6555c530fe134b47d29f81a3',
-          'mp3File': fa2
-
-     }, {
-          'id': '6555c544fe134b47d29f81a5',
-          'mp3File': fa3
-
-     }, {
-          'id': '6555c55afe134b47d29f81a9',
-          'mp3File': fa4
-
-     }, {
-          'id': '6555c573fe134b47d29f81ad',
-          'mp3File': fa5
-
-     }, {
-          'id': '6555c587fe134b47d29f81af',
-          'mp3File': fa6
-
-     }, {
-          'id': '6555c642fe134b47d29f820f',
-          'mp3File': fa7
-     },
+    {
+        id: '6555c4d1fe134b47d29f81a1',
+        mp3File: fa1,
+    },
+    {
+        id: '6555c530fe134b47d29f81a3',
+        mp3File: fa2,
+    },
+    {
+        id: '6555c544fe134b47d29f81a5',
+        mp3File: fa3,
+    },
+    {
+        id: '6555c55afe134b47d29f81a9',
+        mp3File: fa4,
+    },
+    {
+        id: '6555c573fe134b47d29f81ad',
+        mp3File: fa5,
+    },
+    {
+        id: '6555c587fe134b47d29f81af',
+        mp3File: fa6,
+    },
+    {
+        id: '6555c642fe134b47d29f820f',
+        mp3File: fa7,
+    },
 ];
