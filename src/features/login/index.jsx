@@ -50,13 +50,22 @@ const LoginScreen = () => {
         {
             onSuccess: (response) => {
                 if (response?.data?.responseObj?.responseCode == 200) {
-                    const token = response?.data?.responseObj?.responseDataParams?.data?.token;
-                    setAlert({ open: true, severity: 'success', message: response?.data?.responseObj?.responseMessage })
+                    const token =
+                        response?.data?.responseObj?.responseDataParams?.data
+                            ?.token;
+                    setAlert({
+                        open: true,
+                        severity: 'success',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
                     localStorage.setItem('token', token);
                     navigate('/dashboard');
-                }else{
-                    setAlert({ open: true, severity: 'warning', message: response?.data?.responseObj?.responseMessage})
- 
+                } else {
+                    setAlert({
+                        open: true,
+                        severity: 'warning',
+                        message: response?.data?.responseObj?.responseMessage,
+                    });
                 }
             },
 
