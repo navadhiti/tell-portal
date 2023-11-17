@@ -37,11 +37,11 @@ const SignUpScreen = () => {
         email: yup
             .string()
             .email('Invalid email')
-            .required('Email is required')
-            .matches(
-                /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/,
-                'Incorrect email'
-            ),
+            .required('Email is required'),
+            // .matches(
+            //     /^[a-zA-Z0-9]\.[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/,
+            //     'Incorrect email'
+            // ),
         phoneNumber: yup
             .string()
             .required('Phone Number is required')
@@ -147,7 +147,7 @@ const SignUpScreen = () => {
                             direction="column"
                             rowGap={'20px'}
                         >
-                            <ModelHeader>SIGN UP</ModelHeader>
+                            <ModelHeader>SIGNUP</ModelHeader>
                             <form
                                 onSubmit={handleSubmit(onSubmit)}
                                 style={{
@@ -186,7 +186,7 @@ const SignUpScreen = () => {
                                 <Stack>
                                     <TextField
                                         type="Number"
-                                        label="Phone Number"
+                                        label="Phone number"
                                         {...register('phoneNumber', {
                                             required: true,
                                         })}
@@ -251,7 +251,7 @@ const SignUpScreen = () => {
                                     color="primary"
                                     fullWidth
                                 >
-                                    Sign In
+                                    SignUp
                                 </PrimaryButton>
                             </form>
                             <Stack

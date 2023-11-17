@@ -68,7 +68,7 @@ const Header = () => {
                                     letterSpacing: '1px',
                                 }}
                             >
-                                me ..."
+                                me ...
                             </span>
                             <span
                                 style={{
@@ -76,7 +76,7 @@ const Header = () => {
                                     letterSpacing: '1px',
                                 }}
                             >
-                                "Speak with{' '}
+                                " "Speak with{' '}
                             </span>
                             <span
                                 style={{
@@ -84,7 +84,15 @@ const Header = () => {
                                     letterSpacing: '1px',
                                 }}
                             >
-                                me ..."
+                                me ...
+                                <span
+                                    style={{
+                                        color: '#034EA1',
+                                        letterSpacing: '1px',
+                                    }}
+                                >
+                                    "
+                                </span>
                             </span>
                         </div>
                     </Typography>
