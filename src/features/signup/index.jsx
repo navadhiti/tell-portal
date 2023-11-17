@@ -83,6 +83,7 @@ const SignUpScreen = () => {
                         message: response?.data?.responseObj?.responseMessage,
                     });
                     localStorage.setItem('token', token);
+                    localStorage.setItem('voice', 'machine');
                     navigate('/dashboard');
                 } else {
                     setAlert({
@@ -191,7 +192,6 @@ const SignUpScreen = () => {
                                             required: true,
                                         })}
                                         variant="outlined"
-                                        fullWidth
                                         value={inputValue}
                                         onChange={handleInputChange}
                                         maxLength={10}

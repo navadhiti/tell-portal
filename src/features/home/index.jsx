@@ -1,4 +1,11 @@
-import { Card, CardContent, Chip, Container, Grid, Stack } from '@mui/material';
+import {
+    Card,
+    CardContent,
+    Chip,
+    Container,
+    Grid,
+    Stack,
+} from '@mui/material';
 import { PrimaryButton, SecondaryButton } from '../../elements/buttonStyles';
 import { Content, SubHeader } from '../../elements/textStyles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -19,6 +26,7 @@ import {
     maleAudioQuestions,
 } from './audioFiles';
 import React from 'react';
+import VoiceChip from '../../components/chip';
 
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -55,13 +63,17 @@ const HomeScreen = () => {
     const [finalTranscript, setFinalTranscript] = useState('');
     const [transformedWordResult, setTransformedWordResult] = useState(null);
     const [listeningAnswer, setListeningAnswer] = useState(false);
-    const [transformedAnswerResult, setTransformedAnswerResult] =
-        useState(null);
+    const [transformedAnswerResult, setTransformedAnswerResult] = useState(null);
     const SpeechedText = finalTranscript.split(' ');
     const [resultInPercentage, setResultInPercentage] = useState();
     const [open, setOpen] = useState(false);
     const [audioBlob, setAudioBlob] = useState(null);
     const mediaRecorderRef = useRef(null);
+    const [voice, setVoice] = useState(localStorage.getItem('voice'));
+    const audioQuestions =
+        voice === 'male' ? maleAudioQuestions : femaleVoiceQuestion;
+    const audioAnswers = voice === 'male' ? maleAudioAnswer : femaleAudioAnswer;
+
 
     const {
         data: DataQuizAndAnswers,
@@ -130,7 +142,7 @@ const HomeScreen = () => {
                 setTransformedWordResult(data);
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
-                    data?.result_in_percentage === 100
+                        data?.result_in_percentage === 100
                         ? '90'
                         : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
@@ -172,7 +184,7 @@ const HomeScreen = () => {
 
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
-                    data?.result_in_percentage === 100
+                        data?.result_in_percentage === 100
                         ? '93'
                         : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
@@ -284,6 +296,46 @@ const HomeScreen = () => {
                     }}
                     elevation={6}
                 >
+                    <Stack
+                        columnGap={'10px'}
+                        rowGap={'10px'}
+                        direction={{ sm: 'row' }}
+                        width={'95%'}
+                        alignItems={'center'}
+                        justifyContent={'flex-start'}
+                        padding={'10px'}
+                    >
+                        <SubHeader>Voices:</SubHeader>
+
+                        <VoiceChip
+                            label="Machine"
+                            isSelected={voice === 'machine'}
+                            onClick={() => {
+                                setVoice('machine');
+                                localStorage.setItem('voice', 'machine');
+                                setPlaying(0);
+                            }}
+                        />
+                        <VoiceChip
+                            label="Female"
+                            isSelected={voice === 'female'}
+                            onClick={() => {
+                                setVoice('female');
+                                localStorage.setItem('voice', 'female');
+                                setPlaying(0);
+                            }}
+                        />
+                        <VoiceChip
+                            label="Male"
+                            isSelected={voice === 'male'}
+                            onClick={() => {
+                                setVoice('male');
+                                localStorage.setItem('voice', 'male');
+                                setPlaying(0);
+                            }}
+                        />
+                    </Stack>
+
                     <CardContent
                         sx={{
                             width: '95%',
@@ -298,22 +350,45 @@ const HomeScreen = () => {
                             {' '}
                             {texttospeechaudio && playing === 1 ? (
                                 <>
-                                    {maleAudioQuestions.map((data, index) => {
-                                        return (
-                                            data.id ===
-                                                DataQuizAndAnswers?.responseObj
-                                                    ?.responseDataParams?.data
-                                                    ?._id && (
-                                                <ReactAudioPlayer
-                                                    key={index}
-                                                    src={data?.mp3File}
-                                                    controls
-                                                    autoPlay
-                                                    style={{ display: 'none' }}
-                                                />
-                                            )
-                                        );
-                                    })}
+                                    {voice === 'machine' ? (
+                                        <>
+                                            {' '}
+                                            <ReactAudioPlayer
+                                                src={texttospeechaudio}
+                                                controls
+                                                autoPlay
+                                                style={{ display: 'none' }}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            {audioQuestions.map(
+                                                (data, index) => {
+                                                    return (
+                                                        data.id ===
+                                                        DataQuizAndAnswers
+                                                            ?.responseObj
+                                                            ?.responseDataParams
+                                                            ?.data?._id && (
+                                                            <ReactAudioPlayer
+                                                                key={index}
+                                                                src={
+                                                                    data?.mp3File
+                                                                }
+                                                                controls
+                                                                autoPlay
+                                                                style={{
+                                                                    display:
+                                                                        'none',
+                                                                }}
+                                                            />
+                                                        )
+                                                    );
+                                                }
+                                            )}{' '}
+                                        </>
+                                    )}
+
                                     <Chip
                                         onClick={() => {
                                             setPlaying(1);
@@ -429,22 +504,38 @@ const HomeScreen = () => {
                         >
                             {texttospeechaudio && playing === 2 ? (
                                 <>
-                                    {maleAudioAnswer.map((data, index) => {
-                                        return (
-                                            data.id ===
-                                                DataQuizAndAnswers?.responseObj
-                                                    ?.responseDataParams?.data
-                                                    ?._id && (
-                                                <ReactAudioPlayer
-                                                    key={index}
-                                                    src={data.mp3File}
-                                                    controls
-                                                    autoPlay
-                                                    style={{ display: 'none' }}
-                                                />
-                                            )
-                                        );
-                                    })}
+                                    {voice === 'machine' ? (
+                                        <>
+                                            {' '}
+                                            <ReactAudioPlayer
+                                                src={texttospeechaudio}
+                                                controls
+                                                autoPlay
+                                                style={{ display: 'none' }}
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            {audioAnswers.map((data, index) => {
+                                                return (
+                                                    data.id === DataQuizAndAnswers?.responseObj
+                                                        ?.responseDataParams
+                                                        ?.data?._id && (
+                                                        <ReactAudioPlayer
+                                                            key={index}
+                                                            src={data.mp3File}
+                                                            controls
+                                                            autoPlay
+                                                            style={{
+                                                                display: 'none',
+                                                            }}
+                                                        />
+                                                    )
+                                                );
+                                            })}
+                                        </>
+                                    )}
+
                                     <Chip
                                         onClick={() => {
                                             settexttospeechaudio('');
@@ -646,9 +737,9 @@ const HomeScreen = () => {
                 content={
                     playing === 1
                         ? DataQuizAndAnswers?.responseObj?.responseDataParams
-                              ?.data?.question
+                            ?.data?.question
                         : DataQuizAndAnswers?.responseObj?.responseDataParams
-                              ?.data?.answer
+                            ?.data?.answer
                 }
                 audioBlob={audioBlob}
             >
