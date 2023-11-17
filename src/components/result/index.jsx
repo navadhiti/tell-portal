@@ -1,15 +1,13 @@
 import { Button, Grid, IconButton, Rating, Stack } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import StarIcon from '@mui/icons-material/Star';
-
 import DialogTitle from '@mui/material/DialogTitle';
 import { Content } from '../../elements/textStyles';
-import { PrimaryButton, SecondaryButton } from '../../elements/buttonStyles';
 import Confetti from 'react-confetti';
 import CloseIcon from '@mui/icons-material/Close';
+import ReactAudioPlayer from 'react-audio-player';
 // eslint-disable-next-line react/prop-types
-const ResultDialog = ({ open, handleClose, children, percentage }) => {
+const ResultDialog = ({ open, handleClose, children, percentage, content, audioBlob }) => {
     let message = '';
     let color = '';
     if (percentage < 50) {
@@ -58,13 +56,14 @@ const ResultDialog = ({ open, handleClose, children, percentage }) => {
         ctx.fill();
     };
 
+
     return (
         <Dialog
             open={open}
             keepMounted
             onClose={handleClose}
             fullWidth={true}
-            maxWidth={'xs'}
+            maxWidth={'sm'}
         >
             <Stack
                 justifyContent={'flex-end'}
@@ -87,18 +86,25 @@ const ResultDialog = ({ open, handleClose, children, percentage }) => {
                         }}
                     />
                 )}
-                <IconButton onClick={handleClose}>
+
+                <IconButton onClick={handleClose} sx={{ m: 2 }}>
                     <CloseIcon />
                 </IconButton>
             </Stack>
 
-            <DialogTitle maxHeight={'50px'} sx={{ textAlign: 'center' }}>
+
+            <DialogTitle maxHeight={'fit-content'} sx={{ textAlign: 'center' }}>
                 <Stack
                     justifyContent={'center'}
                     alignItems={'center'}
                     display={'flex'}
                     width={'100%'}
+                    textAlign={'center'}
                 >
+                    <Content color="primary" sx={{ textAlign: 'center' }}>
+                        {content}
+                    </Content>
+
                     <Rating
                         size="large"
                         name="text-feedback"
@@ -114,7 +120,11 @@ const ResultDialog = ({ open, handleClose, children, percentage }) => {
                     />
                     <Button
                         size="large"
-                        sx={{ fontWeight: 'bold', fontSize: '27px' }}
+                        sx={{
+                            fontWeight: 'bold',
+                            fontSize: '27px',
+                            maxHeight: '40px',
+                        }}
                     >
                         {percentage}/100
                     </Button>
@@ -124,30 +134,27 @@ const ResultDialog = ({ open, handleClose, children, percentage }) => {
             <Grid
                 container
                 justifyContent={'center'}
-                py={2}
                 textTransform={'capitalize'}
             >
                 {children}
+            </Grid>
+            <Grid
+                container
+                justifyContent={'center'}
+                py={2}
+                textTransform={'capitalize'}
+            >
+                {audioBlob && (
+                    <ReactAudioPlayer
+                        src={URL.createObjectURL(audioBlob)}
+                        controls
+                    />
+                )}
             </Grid>
 
             <Grid container py={2} justifyContent={'center'}>
                 <Content color={color}>{message}</Content>
             </Grid>
-
-            {/* <DialogActions
-                    sx={{
-                        justifyContent: 'space-around',
-                        maxHeight: '30px',
-                        paddingBottom: 3,
-                    }}
-                >
-                    <SecondaryButton size="small" onClick={handleClose}>
-                        Retry
-                    </SecondaryButton>
-                    {percentage === 100 && (
-                        <PrimaryButton onClick={handleClose}>Next</PrimaryButton>
-                    )}
-                </DialogActions> */}
         </Dialog>
     );
 };

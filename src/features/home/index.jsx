@@ -1,8 +1,8 @@
-import { Card, CardContent, Chip, Container, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, MenuList, Paper, Radio, Stack } from '@mui/material';
+import { Card, CardContent, Chip, Container, Grid, Stack } from '@mui/material';
 import { PrimaryButton, SecondaryButton } from '../../elements/buttonStyles';
 import { Content, SubHeader } from '../../elements/textStyles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import Loader from '../../components/loader';
 import { getQuestionAnswers, valueCalcuate } from './homeApi';
@@ -13,45 +13,33 @@ import ResultDialog from '../../components/result';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { femaleAudioAnswer, femaleVoiceQuestion, maleAudioAnswer, maleAudioQuestions } from './audioFiles';
-import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-
 import React from 'react';
 
-const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
 recognition.continuous = true;
 recognition.interimResults = true;
 recognition.lang = 'en-IN';
 
-const SpeechRecognitiona =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognitiona = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognitionAnswer = new SpeechRecognitiona();
+
 recognitionAnswer.continuous = true;
 recognitionAnswer.interimResults = true;
 recognitionAnswer.lang = 'en-IN';
 
 const HomeScreen = () => {
-    const quiznumber = Cookies.get('quiznumber')
-        ? JSON.parse(Cookies.get('quiznumber'))
-        : 1;
+    const quiznumber = Cookies.get('quiznumber') ? JSON.parse(Cookies.get('quiznumber')) : 1;
     const [quizNo, setQuizNo] = useState(quiznumber);
     const [isSpeaked, setIsSpeaked] = useState({
         question: false,
         answer: false,
     });
-    const [texttospeechaudio, settexttospeechaudio] = useState('');
 
+    const [texttospeechaudio, settexttospeechaudio] = useState('');
     const [playing, setPlaying] = useState(0);
     const [loading, setLoading] = useState(false);
-    const {
-        data: DataQuizAndAnswers,
-        isLoading,
-        refetch,
-    } = getQuestionAnswers(quiznumber);
-
-
     const [listening, setListening] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const [interimTranscript, setInterimTranscript] = useState('');
@@ -62,20 +50,15 @@ const HomeScreen = () => {
     const SpeechedText = finalTranscript.split(' ');
     const [resultInPercentage, setResultInPercentage] = useState();
     const [open, setOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [voice, setVoice] = useState(localStorage.getItem('voice'));
+    const [audioBlob, setAudioBlob] = useState(null);
+    const mediaRecorderRef = useRef(null);
 
-    const audioQuestions = voice === 'male' ? maleAudioQuestions : femaleVoiceQuestion;
-    const audioAnswers = voice === 'male' ? maleAudioAnswer : femaleAudioAnswer;
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const {
+        data: DataQuizAndAnswers,
+        isLoading,
+        refetch,
+    } = getQuestionAnswers(quiznumber);
 
-
-    const handleClose = () => {
-        setAnchorEl(null);
-        setOpen(false);
-    };
 
 
     const convertai4bharat = (propText) => {
@@ -131,7 +114,11 @@ const HomeScreen = () => {
                 setInterimTranscript(interim);
                 setFinalTranscript(final);
 
-                const data = valueCalcuate(DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.question, final);
+                const data = valueCalcuate(
+                    DataQuizAndAnswers?.responseObj?.responseDataParams?.data
+                        ?.question,
+                    final
+                );
                 setTransformedWordResult(data);
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
@@ -168,17 +155,10 @@ const HomeScreen = () => {
                 setInterimTranscript(interim);
                 setFinalTranscript(final);
 
-                const data = valueCalcuate(
-                    DataQuizAndAnswers?.responseObj?.responseDataParams?.data
-                        ?.answer,
-                    final
-                );
+                const data = valueCalcuate(DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.answer, final);
                 setTransformedAnswerResult(data);
-                const result_in_percentage =
-                    data?.word_result_array?.order?.length !== 0 &&
-                        data?.result_in_percentage === 100
-                        ? '93'
-                        : data?.result_in_percentage;
+
+                const result_in_percentage = data?.word_result_array?.order?.length !== 0 && data?.result_in_percentage === 100 ? '93' : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
                 setLoading(false);
             };
@@ -196,7 +176,9 @@ const HomeScreen = () => {
         setFinalTranscript('');
         setPlaying(1);
         setListening(!listening);
+
         if (listening == true) {
+            stopRecording();
             recognition.stop();
             setListening(false);
             setOpen(true);
@@ -210,23 +192,57 @@ const HomeScreen = () => {
         setPlaying(2);
         setListeningAnswer(!listeningAnswer);
         if (listeningAnswer == true) {
+            stopRecording();
             recognitionAnswer.stop();
             setListeningAnswer(false);
             setOpen(true);
         }
     };
 
+
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+            });
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+            const chunks = [];
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    chunks.push(event.data);
+                }
+            };
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/wav' });
+                setAudioBlob(blob);
+            };
+            mediaRecorder.start();
+        } catch (error) {
+            return error;
+        }
+    };
+
+    const stopRecording = () => {
+        if (
+            mediaRecorderRef.current &&
+            mediaRecorderRef.current.state === 'recording'
+        ) {
+            mediaRecorderRef.current.stop();
+        }
+    };
+
     useEffect(() => {
         if (listening == true) {
             handleListen();
+            startRecording();
         }
-    }, [listening]);
-
-    useEffect(() => {
         if (listeningAnswer == true) {
             handleAnswerListen();
+            startRecording();
         }
-    }, [listeningAnswer]);
+    }, [listening, listeningAnswer]);
+
 
     useEffect(() => {
         refetch();
@@ -237,10 +253,11 @@ const HomeScreen = () => {
             <Loader load={loading || isLoading} />
 
             <Grid
+                mt={{ xs: 5, sm: 5 }}
                 container
                 justifyContent={'center'}
                 alignItems={'center'}
-                height={'82vh'}
+                minHeight={'82vh'}
             >
                 <Card
                     sx={{
@@ -253,53 +270,6 @@ const HomeScreen = () => {
                     }}
                     elevation={6}
                 >
-                    <IconButton size='large' sx={{ justifySelf: 'flex-end', alignSelf: 'flex-end' }}
-                        onClick={handleMenu}
-                        color="inherit"
-                    >
-                        <RecordVoiceOverIcon />
-                    </IconButton>
-
-
-
-
-                    <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <MenuList>
-                            <MenuItem sx={{ height: '30px' }} onClick={() => {
-                                setVoice('male');
-                                localStorage.setItem('voice', 'male');
-                                setPlaying(0);
-                                setAnchorEl(null);
-                            }}>
-                                <ListItemIcon>
-                                    <Radio checked={voice === 'male'} />
-                                </ListItemIcon>
-                                Male
-                            </MenuItem>
-
-                            <Divider />
-                            <MenuItem sx={{ height: '30px' }}
-                                onClick={() => {
-                                    setVoice('female');
-                                    localStorage.setItem('voice', 'female');
-                                    setPlaying(0);
-                                    setAnchorEl(null);
-                                }}>
-                                <ListItemIcon>
-                                    <Radio checked={voice === 'female'} />
-                                </ListItemIcon>
-                                Female
-                            </MenuItem>
-                        </MenuList>
-                    </Menu>
-
-
-
 
                     <CardContent
                         sx={{
@@ -315,16 +285,20 @@ const HomeScreen = () => {
                             {' '}
                             {texttospeechaudio && playing === 1 ? (
                                 <>
-                                    {audioQuestions.map((data, index) => {
-
-                                        return data.id === DataQuizAndAnswers?.responseObj?.responseDataParams?.data?._id && (
-                                            <ReactAudioPlayer key={index}
-                                                src={data?.mp3File}
-                                                controls
-                                                autoPlay
-                                                style={{ display: 'none' }
-                                                }
-                                            />
+                                    {maleAudioQuestions.map((data, index) => {
+                                        return (
+                                            data.id ===
+                                            DataQuizAndAnswers?.responseObj
+                                                ?.responseDataParams?.data
+                                                ?._id && (
+                                                <ReactAudioPlayer
+                                                    key={index}
+                                                    src={data?.mp3File}
+                                                    controls
+                                                    autoPlay
+                                                    style={{ display: 'none' }}
+                                                />
+                                            )
                                         );
                                     })}
                                     <Chip
@@ -352,10 +326,7 @@ const HomeScreen = () => {
                                 <Chip
                                     onClick={() => {
                                         setPlaying(1);
-                                        setIsSpeaked({
-                                            ...isSpeaked,
-                                            question: true,
-                                        });
+                                        setIsSpeaked({ ...isSpeaked, question: true, });
                                         convertai4bharat(
                                             DataQuizAndAnswers?.responseObj
                                                 ?.responseDataParams?.data
@@ -391,7 +362,8 @@ const HomeScreen = () => {
                                             onClick={toggleListen}
                                             icon={
                                                 <KeyboardVoiceIcon fontSize="medium" />
-                                            } sx={{ fontWeight: 'bold' }}
+                                            }
+                                            sx={{ fontWeight: 'bold' }}
                                             label="Try now"
                                         />
                                     ) : (
@@ -402,7 +374,8 @@ const HomeScreen = () => {
                                             icon={
                                                 <PauseCircleOutlineOutlinedIcon fontSize="medium" />
                                             }
-                                            label="Stop" sx={{ fontWeight: 'bold' }}
+                                            label="Stop"
+                                            sx={{ fontWeight: 'bold' }}
                                         />
                                     )}
                                 </Grid>
@@ -413,12 +386,14 @@ const HomeScreen = () => {
                                     {playing === 1 && (
                                         <>
                                             {!listening ? (
-                                                <ResultComponent
-                                                    speech={SpeechedText}
-                                                    result={
-                                                        transformedWordResult
-                                                    }
-                                                />
+                                                <>
+                                                    <ResultComponent
+                                                        speech={SpeechedText}
+                                                        result={
+                                                            transformedWordResult
+                                                        }
+                                                    />
+                                                </>
                                             ) : (
                                                 <Content color={'GrayText'}>
                                                     Listening...
@@ -438,15 +413,20 @@ const HomeScreen = () => {
                         >
                             {texttospeechaudio && playing === 2 ? (
                                 <>
-                                    {audioAnswers.map((data, index) => {
-                                        return data.id === DataQuizAndAnswers?.responseObj?.responseDataParams?.data?._id && (
-                                            <ReactAudioPlayer key={index}
-                                                src={data.mp3File}
-                                                controls
-                                                autoPlay
-                                                style={{ display: 'none' }
-                                                }
-                                            />
+                                    {maleAudioAnswer.map((data, index) => {
+                                        return (
+                                            data.id ===
+                                            DataQuizAndAnswers?.responseObj
+                                                ?.responseDataParams?.data
+                                                ?._id && (
+                                                <ReactAudioPlayer
+                                                    key={index}
+                                                    src={data.mp3File}
+                                                    controls
+                                                    autoPlay
+                                                    style={{ display: 'none' }}
+                                                />
+                                            )
                                         );
                                     })}
                                     <Chip
@@ -504,20 +484,24 @@ const HomeScreen = () => {
                             mt={2}
                             width={'100%'}
                             justifyContent={'flex-start'}
+                            alignItems={'center'}
                         >
                             <Grid item md={2} sm={12} xs={12} lg={2}>
                                 <Grid container>
                                     {!listeningAnswer ? (
-                                        <Chip
-                                            color="secondary"
-                                            clickable={true}
-                                            id="startaudio"
-                                            onClick={toggleAnswerListen}
-                                            icon={
-                                                <KeyboardVoiceIcon fontSize="medium" />
-                                            } sx={{ fontWeight: 'bold' }}
-                                            label="Try now"
-                                        />
+                                        <>
+                                            <Chip
+                                                color="secondary"
+                                                clickable={true}
+                                                id="startaudio"
+                                                onClick={toggleAnswerListen}
+                                                icon={
+                                                    <KeyboardVoiceIcon fontSize="medium" />
+                                                }
+                                                sx={{ fontWeight: 'bold' }}
+                                                label="Try now"
+                                            />
+                                        </>
                                     ) : (
                                         <Chip
                                             color="primary"
@@ -528,23 +512,26 @@ const HomeScreen = () => {
                                             icon={
                                                 <PauseCircleOutlineOutlinedIcon fontSize="medium" />
                                             }
-                                            label="Stop" sx={{ fontWeight: 'bold' }}
+                                            label="Stop"
+                                            sx={{ fontWeight: 'bold' }}
                                         />
                                     )}
                                 </Grid>
                             </Grid>
 
                             <Grid item md={10} sm={12} xs={12} lg={10}>
-                                <Grid container>
+                                <Grid container alignItems={'center'}>
                                     {playing === 2 && (
                                         <>
                                             {!listeningAnswer ? (
-                                                <ResultComponent
-                                                    speech={SpeechedText}
-                                                    result={
-                                                        transformedAnswerResult
-                                                    }
-                                                />
+                                                <>
+                                                    <ResultComponent
+                                                        speech={SpeechedText}
+                                                        result={
+                                                            transformedAnswerResult
+                                                        }
+                                                    />
+                                                </>
                                             ) : (
                                                 <Content color={'GrayText'}>
                                                     Listening...
@@ -559,7 +546,10 @@ const HomeScreen = () => {
                 </Card>
 
                 <Stack
-                    columnGap={'10px'} rowGap={'10px'}
+                    mt={{ xs: 5, sm: 5 }}
+                    columnGap={'10px'}
+                    rowGap={'10px'}
+                    mb={{ sm: 5, xs: 5 }}
                     direction={{ sm: 'row' }}
                     width={quizNo > 1 ? '80%' : '80%'}
                     alignItems={'center'}
@@ -605,7 +595,8 @@ const HomeScreen = () => {
                     )}
                     <PrimaryButton
                         disabled={
-                            DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.totalQuestions <= quizNo
+                            DataQuizAndAnswers?.responseObj?.responseDataParams
+                                ?.data?.totalQuestions <= quizNo
                         }
                         onClick={() => {
                             settexttospeechaudio('');
@@ -619,9 +610,15 @@ const HomeScreen = () => {
                         }}
                     >
                         {' '}
-                        {DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.totalQuestions === quizNo
-                            ? 'Completed'
-                            : <>Next<ArrowForwardIcon /></>}
+                        {DataQuizAndAnswers?.responseObj?.responseDataParams
+                            ?.data?.totalQuestions === quizNo ? (
+                            'Completed'
+                        ) : (
+                            <>
+                                Next
+                                <ArrowForwardIcon />
+                            </>
+                        )}
                     </PrimaryButton>
                 </Stack>
             </Grid>
@@ -629,7 +626,16 @@ const HomeScreen = () => {
             <ResultDialog
                 open={open}
                 percentage={resultInPercentage}
-                handleClose={handleClose}
+                handleClose={() => setOpen(false)}
+              
+                content={
+                    playing === 1
+                        ? DataQuizAndAnswers?.responseObj?.responseDataParams
+                            ?.data?.question
+                        : DataQuizAndAnswers?.responseObj?.responseDataParams
+                            ?.data?.answer
+                }
+                audioBlob={audioBlob}
             >
                 {playing == 1 ? (
                     <ResultComponent
@@ -651,7 +657,6 @@ export default HomeScreen;
 
 // eslint-disable-next-line react/prop-types
 const ResultComponent = ({ result, speech }) => {
-
     const { word_result_array } = result ? result : [];
     const speechArray = speech ? speech : [];
 
@@ -666,8 +671,6 @@ const ResultComponent = ({ result, speech }) => {
         return 'green';
     };
 
-
-
     return (
         <>
             {speechArray?.map((word, index) => (
@@ -678,3 +681,4 @@ const ResultComponent = ({ result, speech }) => {
         </>
     );
 };
+

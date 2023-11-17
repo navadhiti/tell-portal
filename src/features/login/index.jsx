@@ -30,7 +30,10 @@ const LoginScreen = () => {
             .string()
             .email('Invalid email')
             .required('Email is required')
-            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
+            .matches(
+                /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)?@[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/,
+                'Incorrect email'
+            ),
         password: yup.string().required('Password is required'),
     });
 
@@ -128,7 +131,7 @@ const LoginScreen = () => {
                             direction="column"
                             rowGap={'20px'}
                         >
-                            <ModelHeader >LOGIN</ModelHeader>
+                            <ModelHeader>LOGIN</ModelHeader>
                             <form
                                 onSubmit={handleSubmit(onSubmit)}
                                 style={{
@@ -192,7 +195,7 @@ const LoginScreen = () => {
                                     color="primary"
                                     fullWidth
                                 >
-                                    Log In
+                                    Login
                                 </PrimaryButton>
                             </form>
                             <Stack
@@ -201,7 +204,7 @@ const LoginScreen = () => {
                                 justifyContent={'space-around'}
                             >
                                 <p>Dont have an account</p>
-                                <Link to={'sign-up'}>Sign up</Link>
+                                <Link to={'sign-up'}>Signup</Link>
                             </Stack>
                         </Grid>
                     </Grid>
