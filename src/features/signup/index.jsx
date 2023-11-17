@@ -25,13 +25,21 @@ const SignUpScreen = () => {
     const navigate = useNavigate();
     const { alert, setAlert } = useContext(Context);
     const [showPassword, setShowPassword] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (e) => {
+        const newValue = e.target.value.slice(0, 10); // Take only the first 10 characters
+        setInputValue(newValue);
+
+    };
 
     const validationSchema = yup.object().shape({
         fullName: yup.string().required('Full name is required'),
         email: yup
             .string()
             .email('Invalid email')
-            .required('Email is required'),
+            .required('Email is required')
+            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
         phoneNumber: yup
             .string()
             .required('Phone Number is required')
@@ -181,6 +189,10 @@ const SignUpScreen = () => {
                                             required: true,
                                         })}
                                         variant="outlined"
+                                        value={inputValue}
+                                        onChange={handleInputChange}
+                                        maxLength={10}
+                                        onKeyDown={(e) => (e.key === 'e' || e.key === '.' || e.key === '-' || e.key === ',') && e.preventDefault()}
                                         fullWidth
                                     />
                                     <ErrorToast
