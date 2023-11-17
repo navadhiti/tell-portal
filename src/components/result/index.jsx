@@ -7,7 +7,14 @@ import Confetti from 'react-confetti';
 import CloseIcon from '@mui/icons-material/Close';
 import ReactAudioPlayer from 'react-audio-player';
 // eslint-disable-next-line react/prop-types
-const ResultDialog = ({ open, handleClose, children, percentage, content, audioBlob }) => {
+const ResultDialog = ({
+    open,
+    handleClose,
+    children,
+    percentage,
+    content,
+    audioBlob,
+}) => {
     let message = '';
     let color = '';
     if (percentage < 50) {
@@ -56,7 +63,6 @@ const ResultDialog = ({ open, handleClose, children, percentage, content, audioB
         ctx.fill();
     };
 
-
     return (
         <Dialog
             open={open}
@@ -91,7 +97,6 @@ const ResultDialog = ({ open, handleClose, children, percentage, content, audioB
                     <CloseIcon />
                 </IconButton>
             </Stack>
-
 
             <DialogTitle maxHeight={'fit-content'} sx={{ textAlign: 'center' }}>
                 <Stack

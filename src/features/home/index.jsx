@@ -12,17 +12,24 @@ import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutli
 import ResultDialog from '../../components/result';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { femaleAudioAnswer, femaleVoiceQuestion, maleAudioAnswer, maleAudioQuestions } from './audioFiles';
+import {
+    femaleAudioAnswer,
+    femaleVoiceQuestion,
+    maleAudioAnswer,
+    maleAudioQuestions,
+} from './audioFiles';
 import React from 'react';
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
 recognition.continuous = true;
 recognition.interimResults = true;
 recognition.lang = 'en-IN';
 
-const SpeechRecognitiona = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognitiona =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognitionAnswer = new SpeechRecognitiona();
 
 recognitionAnswer.continuous = true;
@@ -30,7 +37,9 @@ recognitionAnswer.interimResults = true;
 recognitionAnswer.lang = 'en-IN';
 
 const HomeScreen = () => {
-    const quiznumber = Cookies.get('quiznumber') ? JSON.parse(Cookies.get('quiznumber')) : 1;
+    const quiznumber = Cookies.get('quiznumber')
+        ? JSON.parse(Cookies.get('quiznumber'))
+        : 1;
     const [quizNo, setQuizNo] = useState(quiznumber);
     const [isSpeaked, setIsSpeaked] = useState({
         question: false,
@@ -46,7 +55,8 @@ const HomeScreen = () => {
     const [finalTranscript, setFinalTranscript] = useState('');
     const [transformedWordResult, setTransformedWordResult] = useState(null);
     const [listeningAnswer, setListeningAnswer] = useState(false);
-    const [transformedAnswerResult, setTransformedAnswerResult] = useState(null);
+    const [transformedAnswerResult, setTransformedAnswerResult] =
+        useState(null);
     const SpeechedText = finalTranscript.split(' ');
     const [resultInPercentage, setResultInPercentage] = useState();
     const [open, setOpen] = useState(false);
@@ -58,8 +68,6 @@ const HomeScreen = () => {
         isLoading,
         refetch,
     } = getQuestionAnswers(quiznumber);
-
-
 
     const convertai4bharat = (propText) => {
         setListening(false);
@@ -122,7 +130,7 @@ const HomeScreen = () => {
                 setTransformedWordResult(data);
                 const result_in_percentage =
                     data?.word_result_array?.order?.length !== 0 &&
-                        data?.result_in_percentage === 100
+                    data?.result_in_percentage === 100
                         ? '90'
                         : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
@@ -155,10 +163,18 @@ const HomeScreen = () => {
                 setInterimTranscript(interim);
                 setFinalTranscript(final);
 
-                const data = valueCalcuate(DataQuizAndAnswers?.responseObj?.responseDataParams?.data?.answer, final);
+                const data = valueCalcuate(
+                    DataQuizAndAnswers?.responseObj?.responseDataParams?.data
+                        ?.answer,
+                    final
+                );
                 setTransformedAnswerResult(data);
 
-                const result_in_percentage = data?.word_result_array?.order?.length !== 0 && data?.result_in_percentage === 100 ? '93' : data?.result_in_percentage;
+                const result_in_percentage =
+                    data?.word_result_array?.order?.length !== 0 &&
+                    data?.result_in_percentage === 100
+                        ? '93'
+                        : data?.result_in_percentage;
                 setResultInPercentage(result_in_percentage);
                 setLoading(false);
             };
@@ -198,7 +214,6 @@ const HomeScreen = () => {
             setOpen(true);
         }
     };
-
 
     const startRecording = async () => {
         try {
@@ -243,7 +258,6 @@ const HomeScreen = () => {
         }
     }, [listening, listeningAnswer]);
 
-
     useEffect(() => {
         refetch();
     }, [quizNo]);
@@ -270,7 +284,6 @@ const HomeScreen = () => {
                     }}
                     elevation={6}
                 >
-
                     <CardContent
                         sx={{
                             width: '95%',
@@ -288,9 +301,9 @@ const HomeScreen = () => {
                                     {maleAudioQuestions.map((data, index) => {
                                         return (
                                             data.id ===
-                                            DataQuizAndAnswers?.responseObj
-                                                ?.responseDataParams?.data
-                                                ?._id && (
+                                                DataQuizAndAnswers?.responseObj
+                                                    ?.responseDataParams?.data
+                                                    ?._id && (
                                                 <ReactAudioPlayer
                                                     key={index}
                                                     src={data?.mp3File}
@@ -326,7 +339,10 @@ const HomeScreen = () => {
                                 <Chip
                                     onClick={() => {
                                         setPlaying(1);
-                                        setIsSpeaked({ ...isSpeaked, question: true, });
+                                        setIsSpeaked({
+                                            ...isSpeaked,
+                                            question: true,
+                                        });
                                         convertai4bharat(
                                             DataQuizAndAnswers?.responseObj
                                                 ?.responseDataParams?.data
@@ -416,9 +432,9 @@ const HomeScreen = () => {
                                     {maleAudioAnswer.map((data, index) => {
                                         return (
                                             data.id ===
-                                            DataQuizAndAnswers?.responseObj
-                                                ?.responseDataParams?.data
-                                                ?._id && (
+                                                DataQuizAndAnswers?.responseObj
+                                                    ?.responseDataParams?.data
+                                                    ?._id && (
                                                 <ReactAudioPlayer
                                                     key={index}
                                                     src={data.mp3File}
@@ -627,13 +643,12 @@ const HomeScreen = () => {
                 open={open}
                 percentage={resultInPercentage}
                 handleClose={() => setOpen(false)}
-              
                 content={
                     playing === 1
                         ? DataQuizAndAnswers?.responseObj?.responseDataParams
-                            ?.data?.question
+                              ?.data?.question
                         : DataQuizAndAnswers?.responseObj?.responseDataParams
-                            ?.data?.answer
+                              ?.data?.answer
                 }
                 audioBlob={audioBlob}
             >
@@ -681,4 +696,3 @@ const ResultComponent = ({ result, speech }) => {
         </>
     );
 };
-
