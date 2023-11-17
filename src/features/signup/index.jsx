@@ -30,7 +30,6 @@ const SignUpScreen = () => {
     const handleInputChange = (e) => {
         const newValue = e.target.value.slice(0, 10); // Take only the first 10 characters
         setInputValue(newValue);
-
     };
 
     const validationSchema = yup.object().shape({
@@ -39,7 +38,10 @@ const SignUpScreen = () => {
             .string()
             .email('Invalid email')
             .required('Email is required')
-            .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/, 'Incorrect email'),
+            .matches(
+                /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{3,4}$/,
+                'Incorrect email'
+            ),
         phoneNumber: yup
             .string()
             .required('Phone Number is required')
@@ -192,7 +194,13 @@ const SignUpScreen = () => {
                                         value={inputValue}
                                         onChange={handleInputChange}
                                         maxLength={10}
-                                        onKeyDown={(e) => (e.key === 'e' || e.key === '.' || e.key === '-' || e.key === ',') && e.preventDefault()}
+                                        onKeyDown={(e) =>
+                                            (e.key === 'e' ||
+                                                e.key === '.' ||
+                                                e.key === '-' ||
+                                                e.key === ',') &&
+                                            e.preventDefault()
+                                        }
                                         fullWidth
                                     />
                                     <ErrorToast
