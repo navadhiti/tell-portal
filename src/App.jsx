@@ -11,9 +11,7 @@ import { Context } from './context';
 const App = () => {
     const queryClient = new QueryClient();
     const [alert, setAlert] = useState({
-        open: false,
-        severity: 'success',
-        message: '',
+        open: false, severity: 'success', message: '',
     });
 
     return (

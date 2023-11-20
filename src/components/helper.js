@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation } from 'react-router-dom';
 let forbiddenChars = ['!', '?', '.'];
 export const blobToBase64 = (blob, callback) => {
@@ -12,37 +11,9 @@ export const blobToBase64 = (blob, callback) => {
 };
 
 export const maxWidth = 1080;
-export function useWindowSize() {
-    const [size, setSize] = React.useState([0, 0]);
-    React.useLayoutEffect(() => {
-        function updateSize() {
-            setSize([
-                window.innerWidth > maxWidth ? maxWidth : '100%',
-                window.innerHeight,
-            ]);
-        }
-        window.addEventListener('resize', updateSize);
-        updateSize();
-        return () => window.removeEventListener('resize', updateSize);
-    }, []);
-    return size;
-}
 
-export function getLayout(url) {
-    if (url) {
-        let value = url.split('&')[1] ? url.split('&')[1].split('=')[1] : '';
-        return value;
-    }
-}
 
-export function removeForbiddenCharacters(input) {
-    for (let char of forbiddenChars) {
-        if (localStorage.getItem('contentText').includes(char)) {
-            input = input.concat(char);
-        }
-    }
-    return input;
-}
+
 
 export function splitArray(studentArray) {
     for (let char of forbiddenChars) {
@@ -50,17 +21,20 @@ export function splitArray(studentArray) {
     }
     return studentArray;
 }
-export function findRegex(str) {
+
+export const findRegex = (str) => {
     var rawString = str;
     var regex = /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g;
     var cleanString = rawString.replace(regex, '');
     return cleanString;
-}
+};
+
 
 export function useGetUrl() {
     const location = useLocation();
     return location.pathname + location.search;
 }
+
 
 export function replaceAll(string, search, replace) {
     return string.split(search).join(replace);

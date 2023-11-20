@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { headerWithToken, tokenExpires } from '../../api';
-import { compareArrays, replaceAll } from '../../components/helper';
+import { compareArrays, findRegex, replaceAll } from '../../components/helper';
 
 export const getQuestionAnswers = (quiznumber) => {
     return useQuery({
@@ -22,7 +22,7 @@ export const getQuestionAnswers = (quiznumber) => {
 
 export const valueCalcuate = (text, speechText) => {
     try {
-        let texttemp = speechText.toLowerCase();
+        let texttemp = findRegex(speechText).toLowerCase();
 
         texttemp = replaceAll(texttemp, '.', ' ');
         texttemp = replaceAll(texttemp, "'", ' ');
@@ -31,11 +31,9 @@ export const valueCalcuate = (text, speechText) => {
         texttemp = replaceAll(texttemp, '|', ' ');
         texttemp = replaceAll(texttemp, '?', '');
 
-        const studentTextArray = texttemp
-            .split(' ')
-            .filter((word) => word !== '');
+        const studentTextArray = texttemp.split(' ').filter((word) => word !== '');
 
-        let tempteacherText = text.toLowerCase();
+        let tempteacherText = findRegex(text).toLowerCase();
 
         tempteacherText = replaceAll(tempteacherText, '.', ' ');
         tempteacherText = replaceAll(tempteacherText, "'", ' ');
@@ -49,7 +47,7 @@ export const valueCalcuate = (text, speechText) => {
         let student_incorrect_words_result = [];
         let originalwords = teacherTextArray.length;
         let studentswords = studentTextArray.length;
-        // let wrong_words = 0;
+        let wrong_words = 0;
         let correct_words = 0;
         let result_per_words = 0;
         // let result_per_words1 = 0;
@@ -65,7 +63,7 @@ export const valueCalcuate = (text, speechText) => {
                 correct_words++;
                 student_correct_words_result.push(studentTextArray[i]);
             } else {
-                // wrong_words++;
+                wrong_words++;
                 student_incorrect_words_result.push(studentTextArray[i]);
             }
         }
@@ -89,6 +87,7 @@ export const valueCalcuate = (text, speechText) => {
             word_result_array: word_result_array,
             result_in_percentage: result_per_words,
         };
+
         return response;
     } catch (error) {
         return error;

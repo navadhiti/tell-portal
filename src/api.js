@@ -5,6 +5,7 @@ export const headerWithToken = axios.create({
     // baseURL: 'https://6aff-42-106-184-213.ngrok-free.app',
 });
 
+
 headerWithToken.interceptors.request.use((config) => {
     config.headers['x-auth-token'] = localStorage.getItem('token');
     config.headers['ngrok-skip-browser-warning'] = true;
